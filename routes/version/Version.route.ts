@@ -16,12 +16,12 @@ router.route("/check")
 
 // Protected admin routes
 router.route("/")
-  .get(verifyToken, checkRole(['admin']), versionController.getAllVersions)
-  .post(verifyToken, checkRole(['admin']), versionController.createVersion);
+  .get(versionController.getAllVersions)
+  .post(versionController.createVersion);
 
 router.route("/:id")
-  .get(verifyToken, checkRole(['admin']), versionController.getVersionById)
-  .put(verifyToken, checkRole(['admin']), versionController.updateVersion)
-  .delete(verifyToken, checkRole(['admin']), versionController.deleteVersion);
+  .get(versionController.getVersionById)
+  .put(versionController.updateVersion)
+  .delete(versionController.deleteVersion);
 
 export default router;

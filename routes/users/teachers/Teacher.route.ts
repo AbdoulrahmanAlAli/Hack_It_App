@@ -9,6 +9,11 @@ router
   .route("/accountprofileteacher/:id")
   .get(teacherController.getProfileTeacher);
 
+// ~ Get => /api/hackit/ctrl/teacher
+router
+  .route("")
+  .get(teacherController.getTeachers);
+
 // ~ Post => /api/hackit/ctrl/teacher/sendemailpassword
 router
   .route("/sendemailpassword")

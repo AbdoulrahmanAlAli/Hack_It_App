@@ -46,6 +46,17 @@ class CtrlTeacherService {
     return teacher;
   }
 
+  // ~ Get => /api/hackit/ctrl/teachers ~ Get Profile Teacher
+  static async getTeachers() {
+    const teachers = await Teacher.find();
+
+    if (!teachers) {
+      throw new NotFoundError("لا يوجد معلمين");
+    }
+
+    return teachers;
+  }
+
   // ~ Post => /api/hackit/ctrl/teacher/sendemailpassword ~ Send Email For Password For Teacher
   static async SendEmailForPasswordTeacher(teacherData: ITeacher) {
     const { error } = validateSendEmail(teacherData);

@@ -137,4 +137,21 @@ router
     ctrlStudentController.addBankAndContentForStudent
   );
 
+// ~ Patch => /api/hackit/ctrl/student/course/:courseId/session/:sessionId/user/:id ~ Add course and session for student
+router
+  .route("/course/:courseId/session/:sessionId/user/:id")
+  .patch(
+    verifyToken,
+    checkRole(["student"]),
+    ctrlStudentController.addCourseAndSessionForStudent
+  );
+
+// ~ Patch => /api/hackit/ctrl/student/course/:courseId/exam/:examId/user/:id ~ Add course and session for student
+router
+  .route("/course/:courseId/exam/:examId/user/:id")
+  .patch(
+    verifyToken,
+    checkRole(["student"]),
+    ctrlStudentController.addCourseAndExamForStudent
+  );
 export default router;

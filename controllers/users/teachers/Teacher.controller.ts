@@ -13,6 +13,14 @@ class TeacherController {
     }
   );
 
+  // ~ Get => /api/hackit/ctrl/teachers
+  getTeachers = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const teachers = await CtrlTeacherService.getTeachers();
+      res.status(200).json(teachers);
+    }
+  );
+
   // ~ Post => /api/hackit/ctrl/teacher/sendemailpassword ~ Send Email For Password For Teacher
   SendEmailForPasswordTeacher = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {

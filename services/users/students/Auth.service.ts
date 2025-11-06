@@ -67,6 +67,7 @@ class AuthStudentService {
       birth: studentData.birth,
       email: studentData.email,
       password: studentData.password,
+      device_id: studentData.device_id,
       otp: hashedOtp,
       available: false,
     });
@@ -144,6 +145,10 @@ class AuthStudentService {
     );
     if (!isPasswordValid) {
       throw new BadRequestError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+    }
+
+    if (existingInStudent.device_id != studentData.device_id) {
+      throw new BadRequestError("يتم تسجيل الدخول من غير جهاز");
     }
 
     const token = generateJWT({

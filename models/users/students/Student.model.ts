@@ -77,6 +77,10 @@ const StudentSchema = new Schema<IStudent>(
       type: String,
       default: null,
     },
+    device_id: {
+      type: String,
+      required: [true, "device_Id is required"],
+    },
     available: {
       type: Boolean,
       default: false,
@@ -250,6 +254,11 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
       "string.empty": "كلمة السر مطلوبة",
       "any.required": "كلمة السر مطلوبة",
     }),
+    fcmToken: joi.string().default(null),
+    device_id: joi.string().required().messages({
+      "string.empty": "device_Id is required",
+      "any.required": "device_Id is required",
+    }),
   });
 
   return schema.validate(obj);
@@ -269,6 +278,10 @@ const validateLoginStudent = (obj: IStudent): joi.ValidationResult => {
       "string.min": "كلمة السر يجب أن تكون على الأقل 8 أحرف",
       "string.empty": "كلمة السر مطلوبة",
       "any.required": "كلمة السر مطلوبة",
+    }),
+    device_id: joi.string().required().messages({
+      "string.empty": "device_Id is required",
+      "any.required": "device_Id is required",
     }),
   });
 

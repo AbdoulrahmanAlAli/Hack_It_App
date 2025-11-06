@@ -17,6 +17,7 @@ export interface IStudent extends Document {
   password: string;
   otp: string;
   fcmToken?: string;
+  device_id: string;
   available: boolean;
   suspended: boolean;
   resetPass: boolean;

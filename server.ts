@@ -36,9 +36,11 @@ import routeQuestionBank from "./routes/banks/content/question/QuestionBank.rout
 // route import payment
 import routePayment from "./routes/payment/Payment.route";
 
-
 // route import notification
 import routeNotification from "./routes/notification/Notification.route";
+
+// route import Version
+import routeVersion from './routes/version/Version.route'
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -120,6 +122,9 @@ app.use("/api/hackit/ctrl/payment", routePayment);
 
 // Routes Notification
 app.use("/api/hackit/ctrl/notification", routeNotification);
+
+// Routes Version
+app.use("/api/hackit/ctrl/version", routeVersion);
 
 // Error Handler Middleware
 app.use(notFound);

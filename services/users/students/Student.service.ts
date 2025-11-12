@@ -362,6 +362,7 @@ class CtrlStudentService {
           gender: studentData.gender,
           birth: studentData.birth,
           email: studentData.email,
+          device_id: studentData.device_id
         },
       },
       { new: true, runValidators: true }

@@ -398,6 +398,9 @@ const validateUpdateImportantStudent = (
       "string.max": "البريد الإلكتروني يجب ألا يتجاوز 100 حرف",
       "any.required": "البريد الإلكتروني مطلوب",
     }),
+       device_id: joi.string().messages({
+      "string.empty": "device_Id is required"
+    }),
   });
 
   return schema.validate(obj);

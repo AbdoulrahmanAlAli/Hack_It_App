@@ -42,6 +42,9 @@ import routeNotification from "./routes/notification/Notification.route";
 // route import Version
 import routeVersion from './routes/version/Version.route'
 
+// route import Ads
+import routeAds from './routes/ads/Ads.route'
+
 // Validate required environment variables
 const requiredEnvVars = [
   "MONGO_URL",
@@ -125,6 +128,9 @@ app.use("/api/hackit/ctrl/notification", routeNotification);
 
 // Routes Version
 app.use("/api/hackit/ctrl/version", routeVersion);
+
+// Routes Ads
+app.use("/api/hackit/ctrl/ads", routeAds);
 
 // Error Handler Middleware
 app.use(notFound);

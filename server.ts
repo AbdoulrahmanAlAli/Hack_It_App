@@ -19,6 +19,10 @@ import routeResult from "./routes/results/Result.route";
 import routeAuthTeacher from "./routes/users/teachers/Auth.route";
 import routeCtrlTeacher from "./routes/users/teachers/Teacher.route";
 
+// route import admin
+import routeAuthAdmin from "./routes/users/admin/Auth.route";
+import routeCtrlAdmin from "./routes/users/admin/Auth.route";
+
 // route import course
 import routeCourse from "./routes/course/Course.route";
 import routeSession from "./routes/course/session/Session.route";
@@ -40,10 +44,10 @@ import routePayment from "./routes/payment/Payment.route";
 import routeNotification from "./routes/notification/Notification.route";
 
 // route import Version
-import routeVersion from './routes/version/Version.route'
+import routeVersion from "./routes/version/Version.route";
 
 // route import Ads
-import routeAds from './routes/ads/Ads.route'
+import routeAds from "./routes/ads/Ads.route";
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -105,6 +109,10 @@ app.use("/api/hackit/ctrl/result", routeResult);
 // Routes Teacher
 app.use("/api/hackit/ctrl/teacher", routeAuthTeacher);
 app.use("/api/hackit/ctrl/teacher", routeCtrlTeacher);
+
+// Routes Admin
+app.use("/api/hackit/ctrl/admin", routeAuthAdmin);
+app.use("/api/hackit/ctrl/admin", routeCtrlAdmin);
 
 // Routes Course
 app.use("/api/hackit/ctrl/course", routeCourse);

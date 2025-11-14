@@ -6,6 +6,10 @@ import { Group } from "./group/Group.model";
 // Exam Schema
 const ExamSchema = new Schema<IExam>(
   {
+    number: {
+      type: Number,
+      required: true,
+    },
     courseId: {
       type: Schema.Types.ObjectId,
       ref: "Course",
@@ -56,6 +60,7 @@ ExamSchema.index({ createdAt: -1 });
 // Validation: Create Exam
 const validateCreateExam = (obj: IExam): joi.ValidationResult => {
   const schema = joi.object({
+    number: joi.number().required(),
     courseId: joi.string().required().messages({
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",
@@ -82,6 +87,7 @@ const validateCreateExam = (obj: IExam): joi.ValidationResult => {
 // Validation: Update Exam
 const validateUpdateExam = (obj: Partial<IExam>): joi.ValidationResult => {
   const schema = joi.object({
+    number: joi.number(),
     courseId: joi.string().messages({
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",

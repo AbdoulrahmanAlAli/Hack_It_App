@@ -148,7 +148,19 @@ class AuthStudentService {
     }
 
     if (existingInStudent.device_id != studentData.device_id) {
-      throw new BadRequestError("يتم تسجيل الدخول من غير جهاز");
+
+      await Student.findByIdAndUpdate(
+      existingInStudent.id,
+      {
+        $set: {
+          suspended: true,
+          suspensionReason: "تسجيل الدخول من غير حساب",
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+      throw new BadRequestError("يتم تسجيل الدخول من غير جهاز, تم تقييد الحساب, يرجى التواصل معنا");
     }
 
     const token = generateJWT({

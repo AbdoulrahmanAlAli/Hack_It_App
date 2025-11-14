@@ -300,8 +300,8 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
       .messages({
         "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
       }),
-    semester: joi.string().valid("فصل الأول", "فصل الثاني").messages({
-      "any.only": "يجب ان يكون فصل الأول او فصل الثاني",
+    semester: joi.string().valid("الفصل الأول", "الفصل الثاني").messages({
+      "any.only": "يجب ان يكون الفصل الأول او الفصل الثاني",
     }),
     type: joi.string().valid("نظري", "عملي", "شاملة").messages({
       "any.only": "يجب ان يكون نظري او عملي أو شاملة",

@@ -5,6 +5,10 @@ import { ISession } from "./dtos";
 // Session Schema
 const SessionSchema = new Schema<ISession>(
   {
+    number: {
+      type: Number,
+      required: true,
+    },
     courseId: {
       type: Schema.Types.ObjectId,
       ref: "Course",
@@ -49,6 +53,10 @@ const SessionSchema = new Schema<ISession>(
       type: String,
       required: [true, "مدة الفيديو مطلوبة"],
     },
+    available: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -66,6 +74,7 @@ SessionSchema.index({ createdAt: -1 });
 // Validation: Create Session
 const validateCreateSession = (obj: ISession): joi.ValidationResult => {
   const schema = joi.object({
+    number: joi.number().required(),
     courseId: joi.string().required().messages({
       "string.empty": "الكورس مطلوب",
       "any.required": "الكورس مطلوب",
@@ -137,6 +146,7 @@ const validateUpdateSession = (
   obj: Partial<ISession>
 ): joi.ValidationResult => {
   const schema = joi.object({
+    number: joi.number(),
     courseId: joi.string().messages({
       "string.empty": "الكورس مطلوب",
       "any.required": "الكورس مطلوب",
@@ -195,6 +205,9 @@ const validateUpdateSession = (
     duration: joi.string().min(1).messages({
       "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
+    }),
+    available: joi.boolean().messages({
+      "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
     }),
   });
 

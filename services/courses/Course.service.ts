@@ -11,6 +11,7 @@ import { Session } from "../../models/courses/session/Session.model";
 import { Teacher } from "../../models/users/teachers/Teacher.model";
 import { Exam } from "../../models/courses/exam/Exam.model";
 import mongoose from "mongoose";
+import { Student } from "../../models/users/students/Student.model";
 
 class CtrlCourseService {
   // ~ POST /api/hackit/ctrl/course - Create a new course
@@ -55,7 +56,7 @@ class CtrlCourseService {
   }
 
   // ~ GET /api/hackit/ctrl/course/:id - Get course by ID
-  static async getCourseById(id: string) {
+  static async getCourseById(id: string, studentId: string, role: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new NotFoundError("معرف الكورس غير صالح");
     }
@@ -82,6 +83,33 @@ class CtrlCourseService {
       .lean();
 
     if (!course) throw new NotFoundError("الكورس غير موجود");
+
+    // Check if student is enrolled in the course
+    let isEnrolled = false;
+
+    if (role === "student") {
+      if (!studentId) {
+        throw new BadRequestError("معرف الطالب مطلوب");
+      }
+
+      const student = await Student.findById(studentId).select(
+        "enrolledCourses"
+      );
+      if (!student) {
+        throw new NotFoundError("الطالب غير موجود");
+      }
+
+      // Check if the course ID exists in student's enrolledCourses array
+      isEnrolled = student.enrolledCourses.some(
+        (enrolledCourseId) => enrolledCourseId.toString() === id
+      );
+
+      if (!isEnrolled) {
+        throw new BadRequestError(
+          "عذراً، يجب شراء الكورس أولاً للوصول إلى المحتوى"
+        );
+      }
+    }
 
     const sessions = course.sessions || [];
     const exams = course.exams || [];

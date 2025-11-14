@@ -12,6 +12,7 @@ import {
 } from "../../../models/courses/session/Session.model";
 import { ICloudinaryFile } from "../../../utils/types";
 import path from "path";
+import { number } from "joi";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -29,6 +30,14 @@ class CtrlSessionService {
     });
     if (!sessionHave) {
       throw new BadRequestError("الجلسة موجودة بالفعل");
+    }
+
+    const numberHave = await Session.find({
+      courseId: sessionData.courseId,
+      number: sessionData.number,
+    });
+    if (numberHave) {
+      throw new BadRequestError("الرقم موجود بالفعل");
     }
 
     const session = await Session.create(sessionData);

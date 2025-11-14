@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface ISession extends Document {
+  number: number;
   courseId: Types.ObjectId;
   video: string;
   name: string;
@@ -13,4 +14,5 @@ export interface ISession extends Document {
     type: string;
   }[];
   duration: string;
+  available: boolean;
 }

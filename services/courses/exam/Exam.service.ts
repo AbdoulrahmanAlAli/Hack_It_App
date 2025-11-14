@@ -21,6 +21,14 @@ class ExamService {
     const course = await Course.findById(examData.courseId);
     if (!course) throw new NotFoundError("الكورس غير موجود");
 
+    const numberHave = await Exam.find({
+      courseId: examData.courseId,
+      number: examData.number,
+    });
+    if (numberHave) {
+      throw new BadRequestError("الرقم موجود بالفعل");
+    }
+
     const exam = await Exam.create(examData);
 
     if (!exam) throw new NotFoundError("فشل إنشاء الاختبار");
@@ -48,7 +56,7 @@ class ExamService {
     const { error } = validateUpdateExam(updateData);
     if (error) throw new BadRequestError(error.details[0].message);
 
-    const examHave = await Exam.findById(examId)
+    const examHave = await Exam.findById(examId);
     if (!examHave) {
       throw new NotFoundError("الاختبار غير موجود");
     }

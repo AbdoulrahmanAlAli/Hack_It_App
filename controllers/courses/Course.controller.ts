@@ -17,7 +17,12 @@ class CtrlCourseController {
 
   // ~ GET /api/hackit/ctrl/course/:id - Get course by ID
   getCourseById = asyncHandler(async (req: Request, res: Response) => {
-    const course = await CtrlCourseService.getCourseById(req.params.id);
+     const user = (req as AuthenticatedRequest).user;
+     if(!user){
+      throw new BadRequestError('token not found')
+     }
+    
+    const course = await CtrlCourseService.getCourseById(req.params.id, user?.id, user?.role);
     res.status(200).json(course);
   });
 

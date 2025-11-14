@@ -58,16 +58,8 @@ class CtrlAdminService {
       throw new BadRequestError("اسم المستخدم مسجل مسبقاً");
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(adminData.password, salt);
 
-    const admin = await Admin.create({
-      userName: adminData.userName,
-      phoneNumber: adminData.phoneNumber,
-      email: adminData.email,
-      password: hashedPassword,
-    });
+    const admin = await Admin.create(adminData);
 
     const token = generateJWT({
       id: admin.id,

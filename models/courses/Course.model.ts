@@ -62,6 +62,10 @@ const CourseSchema = new Schema<ICourse>(
       trim: true,
       maxlength: [200, "الملاحظات يجب ألا تتجاوز 200 حرف"],
     },
+    whatsapp: {
+      type: String,
+      trim: true,
+    },
     type: {
       type: String,
       enum: {
@@ -113,10 +117,10 @@ const CourseSchema = new Schema<ICourse>(
       },
     ],
   },
-   { 
+  {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
 );
 
@@ -139,7 +143,7 @@ CourseSchema.virtual("comments", {
 });
 
 // Virtual for discounted price
-CourseSchema.virtual("discountedPrice").get(function(this: ICourse) {
+CourseSchema.virtual("discountedPrice").get(function (this: ICourse) {
   if (this.discount.dis && this.discount.rate) {
     return this.price * (1 - this.discount.rate / 100);
   }
@@ -151,15 +155,15 @@ CourseSchema.pre("findOneAndDelete", async function (next) {
     const course = await this.model.findOne(this.getFilter());
     if (course) {
       const courseId = course._id;
-      
+
       // نحذف جميع الـ Sessions المرتبطة بهذا الكورس
       await Session.deleteMany({ courseId });
       console.log(`✅ تم حذف جميع الجلسات المرتبطة بالكورس ${courseId}`);
-      
+
       // نحذف جميع الـ Exams المرتبطة بهذا الكورس
       await Exam.deleteMany({ courseId });
       console.log(`✅ تم حذف جميع الامتحانات المرتبطة بالكورس ${courseId}`);
-      
+
       // نحذف جميع الـ Comments المرتبطة بهذا الكورس
       await Comment.deleteMany({ courseId });
       console.log(`✅ تم حذف جميع التعليقات المرتبطة بالكورس ${courseId}`);
@@ -222,6 +226,7 @@ const validateCreateCourse = (obj: ICourse): joi.ValidationResult => {
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
+    whatsapp: joi.string(),
     type: joi.string().valid("نظري", "عملي", "شاملة").required().messages({
       "any.only": "يجب ان يكون نظري او عملي أو شاملة",
       "any.required": "نوع الكورس مطلوب",
@@ -284,6 +289,7 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
+    whatsapp: joi.string(),
     teacher: joi.string().messages({
       "string.empty": "المعلم مطلوب",
       "any.required": "المعلم مطلوب",

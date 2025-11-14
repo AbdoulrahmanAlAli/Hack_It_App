@@ -25,6 +25,7 @@ export interface ICourse extends Document {
   video: string;
   free: boolean;
   students: Types.ObjectId[];
+  whatsapp: string;
 
   // Virtual fields (populated)
   sessions?: Types.ObjectId[];

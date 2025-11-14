@@ -36,7 +36,7 @@ class CtrlSessionService {
       courseId: sessionData.courseId,
       number: sessionData.number,
     });
-    if (numberHave) {
+    if (!numberHave) {
       throw new BadRequestError("الرقم موجود بالفعل");
     }
 

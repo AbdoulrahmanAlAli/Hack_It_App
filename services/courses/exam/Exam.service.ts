@@ -25,7 +25,7 @@ class ExamService {
       courseId: examData.courseId,
       number: examData.number,
     });
-    if (numberHave) {
+    if (!numberHave) {
       throw new BadRequestError("الرقم موجود بالفعل");
     }
 

@@ -112,7 +112,6 @@ class PaymentService {
     // Check each code to find the matching one
     let validPaymentCode: any = null;
     for (const code of paymentCodes) {
-      // Use type assertion to access the compareCode method
       const paymentCodeDoc = code as any;
       const isMatch = await paymentCodeDoc.compareCode(verificationData.code);
       if (isMatch) {
@@ -140,44 +139,29 @@ class PaymentService {
       throw new BadRequestError("الطالب مسجل بالفعل في هذا الكورس");
     }
 
-    // Start transaction
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
       // Mark payment code as used
       validPaymentCode.used = true;
       validPaymentCode.studentId = student._id;
-      await validPaymentCode.save({ session });
+      await validPaymentCode.save();
 
       // Create enrollment
-      const enrollment = await Enrollment.create(
-        [
-          {
-            studentId: student._id,
-            courseId: validPaymentCode.courseId,
-            paymentCode: verificationData.code,
-            enrolledAt: new Date(),
-          },
-        ],
-        { session }
-      );
+      const enrollment = await Enrollment.create({
+        studentId: student._id,
+        courseId: validPaymentCode.courseId,
+        paymentCode: verificationData.code,
+        enrolledAt: new Date(),
+      });
 
       // Add course to student's enrolled courses
-      await Student.findByIdAndUpdate(
-        student._id,
-        { $addToSet: { enrolledCourses: validPaymentCode.courseId } },
-        { session }
-      );
+      await Student.findByIdAndUpdate(student._id, {
+        $addToSet: { enrolledCourses: validPaymentCode.courseId },
+      });
 
-      await Course.findByIdAndUpdate(
-        validPaymentCode.courseId,
-        { $addToSet: { students: student._id } },
-        { session }
-      );
-
-      await session.commitTransaction();
-      session.endSession();
+      // Add student to course's students list
+      await Course.findByIdAndUpdate(validPaymentCode.courseId, {
+        $addToSet: { students: student._id },
+      });
 
       return {
         message: "تم تفعيل الكود وتسجيل الكورس بنجاح",
@@ -188,9 +172,12 @@ class PaymentService {
         },
       };
     } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      throw error;
+      // If any operation fails, revert the payment code usage
+      await PaymentCode.findByIdAndUpdate(validPaymentCode._id, {
+        used: false,
+        studentId: null,
+      });
+      throw new BadRequestError("فشل في عملية التسجيل، يرجى المحاولة مرة أخرى");
     }
   }
 

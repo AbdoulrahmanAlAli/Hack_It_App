@@ -21,7 +21,7 @@ import routeCtrlTeacher from "./routes/users/teachers/Teacher.route";
 
 // route import admin
 import routeAuthAdmin from "./routes/users/admin/Auth.route";
-import routeCtrlAdmin from "./routes/users/admin/Auth.route";
+import routeCtrlAdmin from "./routes/users/admin/Admin.route";
 
 // route import course
 import routeCourse from "./routes/course/Course.route";

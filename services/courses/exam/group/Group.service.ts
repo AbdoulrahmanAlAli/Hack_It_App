@@ -44,42 +44,44 @@ class GroupService {
 
     const group = await Group.findById(id)
       .populate("examId", "title")
-      .populate("questions");
+      .populate({
+        path: "questions",
+        options: { sort: { createdAt: -1 } }, // Optional: sort questions
+      });
+
     if (!group) throw new NotFoundError("المجموعة غير موجودة");
 
     return group;
   }
 
-  // Get groups by exam ID
+  // Get groups by exam ID with all questions
   static async getGroupsByExamId(examId: string) {
     if (!mongoose.Types.ObjectId.isValid(examId)) {
       throw new BadRequestError("معرف الامتحان غير صالح");
     }
 
-    const allGroups = await Group.find({ examId })
+    // Get all groups with their questions populated
+    const groups = await Group.find({ examId })
       .populate("examId", "title")
-      .populate("questions");
+      .populate({
+        path: "questions",
+        options: { sort: { createdAt: -1 } }, // Optional: sort questions
+      });
 
-    const limit: number = allGroups.length;
+    if (groups.length === 0) {
+      throw new NotFoundError("لا توجد مجموعات لهذا الامتحان");
+    }
 
-    const shuffledGroups = this.shuffleArray([...allGroups]);
+    // Shuffle groups if needed
+    const shuffledGroups = this.shuffleArray([...groups]);
 
-    // Attach related questions for each group
-    const groupsWithQuestions = await Promise.all(
-      shuffledGroups.map(async (group) => {
-        const questions = await Question.find({ groupId: group._id });
-        const shuffledQuestions = this.shuffleArray([...questions]);
+    // Return groups with all their questions (no slicing)
+    const groupsWithAllQuestions = shuffledGroups.map((group) => ({
+      ...group.toObject(),
+      questions: group.questions || [], // Ensure questions array exists
+    }));
 
-        return {
-          ...group.toObject(),
-          questions: limit
-            ? shuffledQuestions.slice(0, limit)
-            : shuffledQuestions,
-        };
-      })
-    );
-
-    return groupsWithQuestions;
+    return groupsWithAllQuestions;
   }
 
   // Update group

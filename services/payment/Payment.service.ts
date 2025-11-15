@@ -20,6 +20,7 @@ interface GeneratePaymentData {
 interface VerifyPaymentData {
   code: string;
   universityNumber: number;
+  courseId: string;
   studentId: string;
 }
 
@@ -81,7 +82,9 @@ class PaymentService {
   }
 
   // ~ POST /api/payment/verify ~ Verify and use payment code
-  static async verifyPaymentCode(verificationData: VerifyPaymentData) {
+  static async verifyPaymentCode(
+    verificationData: VerifyPaymentData & { courseId: string }
+  ) {
     const { error } = validateUsePaymentCode(verificationData);
     if (error) {
       throw new BadRequestError(error.details[0].message);
@@ -98,6 +101,12 @@ class PaymentService {
       throw new BadRequestError("الرقم الجامعي غير مطابق");
     }
 
+    // Check if the requested course exists
+    const requestedCourse = await Course.findById(verificationData.courseId);
+    if (!requestedCourse) {
+      throw new NotFoundError("الكورس المطلوب غير موجود");
+    }
+
     // Find valid payment codes for this university number
     const paymentCodes = await PaymentCode.find({
       universityNumber: verificationData.universityNumber,
@@ -109,13 +118,12 @@ class PaymentService {
       throw new NotFoundError("لا توجد أكواد دفع صالحة");
     }
 
-    // Check each code to find the matching one
+    // Check each code to find the matching one using compareCode method
     let validPaymentCode: any = null;
     for (const code of paymentCodes) {
-      const paymentCodeDoc = code as any;
-      const isMatch = await paymentCodeDoc.compareCode(verificationData.code);
+      const isMatch = await code.compareCode(verificationData.code);
       if (isMatch) {
-        validPaymentCode = paymentCodeDoc;
+        validPaymentCode = code;
         break;
       }
     }
@@ -124,18 +132,22 @@ class PaymentService {
       throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
     }
 
-    // Check if course exists
-    const course = await Course.findById(validPaymentCode.courseId);
-    if (!course) {
-      throw new NotFoundError("الكورس غير موجود");
+    // Check if the payment code is for the same course the student is trying to enroll in
+    if (validPaymentCode.courseId.toString() !== verificationData.courseId) {
+      // Get the actual course info for better error message
+      const actualCourse = await Course.findById(validPaymentCode.courseId);
+      const courseName = actualCourse ? actualCourse.name : "غير معروف";
+
+      throw new BadRequestError(`كود الدفع غير صحيح أو منتهي الصلاحية`);
     }
 
     // Check if already enrolled
-    const existingEnrollment = await Enrollment.findOne({
-      studentId: student._id,
-      courseId: validPaymentCode.courseId,
-    });
-    if (existingEnrollment) {
+    const isEnrolled = student.enrolledCourses.some(
+      (enrolledCourseId) =>
+        enrolledCourseId.toString() === verificationData.courseId
+    );
+
+    if (isEnrolled) {
       throw new BadRequestError("الطالب مسجل بالفعل في هذا الكورس");
     }
 
@@ -148,27 +160,27 @@ class PaymentService {
       // Create enrollment
       const enrollment = await Enrollment.create({
         studentId: student._id,
-        courseId: validPaymentCode.courseId,
+        courseId: verificationData.courseId,
         paymentCode: verificationData.code,
         enrolledAt: new Date(),
       });
 
       // Add course to student's enrolled courses
       await Student.findByIdAndUpdate(student._id, {
-        $addToSet: { enrolledCourses: validPaymentCode.courseId },
+        $addToSet: { enrolledCourses: verificationData.courseId },
       });
 
       // Add student to course's students list
-      await Course.findByIdAndUpdate(validPaymentCode.courseId, {
+      await Course.findByIdAndUpdate(verificationData.courseId, {
         $addToSet: { students: student._id },
       });
 
       return {
         message: "تم تفعيل الكود وتسجيل الكورس بنجاح",
         course: {
-          _id: course._id,
-          name: course.name,
-          image: course.image,
+          _id: requestedCourse._id,
+          name: requestedCourse.name,
+          image: requestedCourse.image,
         },
       };
     } catch (error) {

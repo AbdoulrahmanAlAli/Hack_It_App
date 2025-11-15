@@ -30,7 +30,6 @@ const QuestionSchema = new Schema<IQuestion>(
     },
     title: {
       type: String,
-      required: [true, "عنوان السؤال مطلوب"],
       trim: true,
     },
     subTitle: {
@@ -96,28 +95,30 @@ const validateCreateQuestion = (obj: IQuestion): joi.ValidationResult => {
       "string.empty": "معرف المجموعة مطلوب",
       "any.required": "معرف المجموعة مطلوب",
     }),
-    title: joi.string().required().messages({
-      "string.empty": "عنوان السؤال مطلوب",
-      "any.required": "عنوان السؤال مطلوب",
-    }),
-    subTitle: joi.string().trim().allow(''),
+    title: joi.string().trim().allow(""),
+    subTitle: joi.string().trim().allow(""),
     image: joi.string().uri().messages({
       "string.uri": "يجب أن يكون رابط الصورة صحيحًا",
     }),
-    answers: joi.array().items(
-      joi.object({
-        title: joi.string().required(),
-        correct: joi.boolean().required(),
-      })
-    ).min(1).required().messages({
-      "array.min": "يجب أن يحتوي السؤال على الأقل على إجابة واحدة",
-      "any.required": "الإجابات مطلوبة",
-    }),
+    answers: joi
+      .array()
+      .items(
+        joi.object({
+          title: joi.string().required(),
+          correct: joi.boolean().required(),
+        })
+      )
+      .min(1)
+      .required()
+      .messages({
+        "array.min": "يجب أن يحتوي السؤال على الأقل على إجابة واحدة",
+        "any.required": "الإجابات مطلوبة",
+      }),
     mark: joi.number().required().messages({
       "number.base": "علامة السؤال يجب أن تكون رقماً",
       "any.required": "علامة السؤال مطلوبة",
     }),
-    note: joi.string().trim().allow(''),
+    note: joi.string().trim().allow(""),
     direction: joi.string().valid("ltr", "rtl").default("rtl").messages({
       "string.base": "الاتجاه يجب أن يكون نصاً",
       "any.only": "الاتجاه يجب أن يكون إما ltr أو rtl",
@@ -128,28 +129,31 @@ const validateCreateQuestion = (obj: IQuestion): joi.ValidationResult => {
 };
 
 // Validation: Update Question
-const validateUpdateQuestion = (obj: Partial<IQuestion>): joi.ValidationResult => {
+const validateUpdateQuestion = (
+  obj: Partial<IQuestion>
+): joi.ValidationResult => {
   const schema = joi.object({
     groupId: joi.string().messages({
       "string.empty": "معرف المجموعة مطلوب",
     }),
-    title: joi.string().messages({
-      "string.empty": "عنوان السؤال مطلوب",
-    }),
-    subTitle: joi.string().trim().allow(''),
+    title: joi.string().trim().allow(""),
+    subTitle: joi.string().trim().allow(""),
     image: joi.string().uri().messages({
       "string.uri": "يجب أن يكون رابط الصورة صحيحًا",
     }),
-    answers: joi.array().items(
-      joi.object({
-        title: joi.string().required(),
-        correct: joi.boolean().required(),
-      })
-    ).min(1),
+    answers: joi
+      .array()
+      .items(
+        joi.object({
+          title: joi.string().required(),
+          correct: joi.boolean().required(),
+        })
+      )
+      .min(1),
     mark: joi.number().messages({
       "number.base": "علامة السؤال يجب أن تكون رقماً",
     }),
-    note: joi.string().trim().allow(''),
+    note: joi.string().trim().allow(""),
     direction: joi.string().valid("ltr", "rtl").messages({
       "string.base": "الاتجاه يجب أن يكون نصاً",
       "any.only": "الاتجاه يجب أن يكون إما ltr أو rtl",
@@ -159,4 +163,9 @@ const validateUpdateQuestion = (obj: Partial<IQuestion>): joi.ValidationResult =
   return schema.validate(obj);
 };
 
-export { Question, validateCreateQuestion, validateUpdateQuestion, validateAnswer };
+export {
+  Question,
+  validateCreateQuestion,
+  validateUpdateQuestion,
+  validateAnswer,
+};

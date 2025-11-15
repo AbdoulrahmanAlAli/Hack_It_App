@@ -96,6 +96,10 @@ const validateUsePaymentCode = (obj: any): joi.ValidationResult => {
     studentId: joi.string().optional().messages({
       "string.base": "معرف الطالب يجب أن يكون نصًا",
     }),
+       courseId: joi.string().required().messages({
+      "string.empty": "معرف الكورس مطلوب",
+      "any.required": "معرف الكورس مطلوب",
+    }),
   });
 
   return schema.validate(obj);

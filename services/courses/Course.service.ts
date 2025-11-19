@@ -87,30 +87,6 @@ class CtrlCourseService {
     // Check if student is enrolled in the course
     let isEnrolled = false;
 
-    if (role === "student") {
-      if (!studentId) {
-        throw new BadRequestError("معرف الطالب مطلوب");
-      }
-
-      const student = await Student.findById(studentId).select(
-        "enrolledCourses"
-      );
-      if (!student) {
-        throw new NotFoundError("الطالب غير موجود");
-      }
-
-      // Check if the course ID exists in student's enrolledCourses array
-      isEnrolled = student.enrolledCourses.some(
-        (enrolledCourseId) => enrolledCourseId.toString() === id
-      );
-
-      if (!isEnrolled) {
-        throw new BadRequestError(
-          "عذراً، يجب شراء الكورس أولاً للوصول إلى المحتوى"
-        );
-      }
-    }
-
     const sessions = course.sessions || [];
     const exams = course.exams || [];
 
@@ -119,6 +95,19 @@ class CtrlCourseService {
       (course.teacher as any).toString();
 
     const teacherStats = await this.calculateTeacherStats(teacherId);
+
+    // FIRST THING: Get total files count
+    const totalFiles = sessions.reduce((total, session) => {
+      return (
+        total + ((session as any).files ? (session as any).files.length : 0)
+      );
+    }, 0);
+
+    // SECOND THING: Get session with number = 1 separately (not from populate)
+    const firstSession = await Session.findOne({
+      courseId: id,
+      number: 1,
+    }).lean();
 
     // إصلاح الخطأ والترتيب من الأقدم للأحدث
     const allActivities = [
@@ -153,7 +142,51 @@ class CtrlCourseService {
           : course.price,
       isDiscounted: course.discount?.dis || false,
       sessionsAndExams: allActivities,
+      // FIRST THING: Add file count
+      totalFiles: totalFiles,
+      // SECOND THING: Add first session separately
+      firstSession: firstSession,
     };
+
+    const courseNotEnrolled = {
+      ...courseWithoutArrays,
+      studentsCount: course.students?.length || 0,
+      sessionsCount: sessions.length,
+      examsCount: exams.length,
+      commentsCount: course.comments?.length || 0,
+      teacherRating: teacherStats.averageRating,
+      discountedPrice:
+        course.discount?.dis && course.discount?.rate
+          ? course.price * (1 - course.discount.rate / 100)
+          : course.price,
+      isDiscounted: course.discount?.dis || false,
+      // FIRST THING: Add file count for non-enrolled too
+      totalFiles: totalFiles,
+      // SECOND THING: Add first session for non-enrolled too
+      firstSession: firstSession,
+    };
+
+    if (role === "student") {
+      if (!studentId) {
+        throw new BadRequestError("معرف الطالب مطلوب");
+      }
+
+      const student = await Student.findById(studentId).select(
+        "enrolledCourses"
+      );
+      if (!student) {
+        throw new NotFoundError("الطالب غير موجود");
+      }
+
+      // Check if the course ID exists in student's enrolledCourses array
+      isEnrolled = student.enrolledCourses.some(
+        (enrolledCourseId) => enrolledCourseId.toString() === id
+      );
+
+      if (!isEnrolled) {
+        return courseNotEnrolled;
+      }
+    }
 
     return courseWithStats;
   }

@@ -14,7 +14,9 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
     },
     universityNumber: {
       type: Number,
-      required: [true, "الرقم الجامعي مطلوب"],
+    },
+    price: {
+      type: Number,
     },
     courseId: {
       type: Schema.Types.ObjectId,
@@ -24,16 +26,13 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
     studentId: {
       type: Schema.Types.ObjectId,
       ref: "Student",
-      default: null,
     },
     adminName: {
       type: String,
-      required: [true, "اسم المسؤول مطلوب"],
       trim: true,
     },
     studentNumber: {
       type: String,
-      required: [true, "رقم الطالب مطلوب"],
       trim: true,
     },
     used: {
@@ -43,13 +42,13 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
     expiresAt: {
       type: Date,
       required: [true, "تاريخ الانتهاء مطلوب"],
-      index: { expires: 0 }
+      index: { expires: 0 },
     },
   },
-  { 
+  {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
 );
 
@@ -67,7 +66,9 @@ PaymentCodeSchema.pre("save", async function (next) {
 });
 
 // Compare code method
-PaymentCodeSchema.methods.compareCode = async function (candidateCode: string): Promise<boolean> {
+PaymentCodeSchema.methods.compareCode = async function (
+  candidateCode: string
+): Promise<boolean> {
   return bcrypt.compare(candidateCode, this.code);
 };
 
@@ -93,14 +94,6 @@ const validateCreatePaymentCode = (obj: any): joi.ValidationResult => {
     courseId: joi.string().required().messages({
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",
-    }),
-    adminName: joi.string().required().messages({
-      "string.empty": "اسم المسؤول مطلوب",
-      "any.required": "اسم المسؤول مطلوب",
-    }),
-    studentNumber: joi.string().required().messages({
-      "string.empty": "رقم الطالب مطلوب",
-      "any.required": "رقم الطالب مطلوب",
     }),
   });
 
@@ -131,8 +124,4 @@ const validateUsePaymentCode = (obj: any): joi.ValidationResult => {
   return schema.validate(obj);
 };
 
-export {
-  PaymentCode,
-  validateCreatePaymentCode,
-  validateUsePaymentCode,
-};
+export { PaymentCode, validateCreatePaymentCode, validateUsePaymentCode };

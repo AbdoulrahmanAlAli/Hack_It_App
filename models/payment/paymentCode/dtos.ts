@@ -5,6 +5,7 @@ export interface IPaymentCode extends Document {
   universityNumber: number;
   courseId: Types.ObjectId | string;
   studentId?: Types.ObjectId | string;
+  price: number;
   adminName: string;
   studentNumber: string;
   used: boolean;

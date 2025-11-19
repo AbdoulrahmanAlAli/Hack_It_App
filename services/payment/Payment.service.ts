@@ -55,7 +55,6 @@ class PaymentService {
     // Check if student exists with this university number AND student number
     const student = await Student.findOne({
       universityNumber: paymentData.universityNumber,
-      userName: paymentData.studentNumber, // Changed to compare with userName
     });
     if (!student) {
       throw new NotFoundError("الطالب غير موجود أو رقم الطالب غير مطابق");
@@ -83,7 +82,7 @@ class PaymentService {
       courseId: paymentData.courseId,
       studentId: student._id,
       adminName: admin.userName, // Use admin's userName as adminName
-      studentNumber: paymentData.studentNumber,
+      studentNumber: student.phoneNumber,
       expiresAt,
     });
 
@@ -210,6 +209,21 @@ class PaymentService {
     }
   }
 
+  // ~ GET /api/payment/codes ~ Get all payment codes
+  static async getAllPaymentCodes() {
+    const paymentCodes = await PaymentCode.find()
+      .populate("courseId")
+      .populate("studentId")
+      .select(
+        "code universityNumber used expiresAt courseId studentId adminName studentNumber createdAt"
+      )
+      .sort({ createdAt: -1 });
+
+    return {
+      paymentCodes
+    };
+  }
+
   // ~ GET /api/payment/codes/:universityNumber ~ Get payment codes for student
   static async getStudentPaymentCodes(universityNumber: number) {
     const paymentCodes = await PaymentCode.find({
@@ -226,8 +240,6 @@ class PaymentService {
         course: code.courseId,
         used: code.used,
         expiresAt: code.expiresAt,
-        adminName: code.adminName,
-        studentNumber: code.studentNumber,
         createdAt: code.createdAt,
       })),
     };
@@ -264,7 +276,6 @@ class PaymentService {
         universityNumber: code.universityNumber,
         course: code.courseId,
         student: code.studentId,
-        studentNumber: code.studentNumber,
         used: code.used,
         expiresAt: code.expiresAt,
         createdAt: code.createdAt,

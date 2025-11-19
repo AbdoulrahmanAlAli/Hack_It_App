@@ -34,6 +34,12 @@ class PaymentController {
     }
   );
 
+  // ~ GET /api/payment/codes ~ Get all payment codes
+  getAllPaymentCodes = asyncHandler(async (req: Request, res: Response) => {
+    const paymentCodes = await PaymentService.getAllPaymentCodes();
+    res.status(200).json(paymentCodes);
+  });
+
   // ~ GET /api/payment/codes/:universityNumber ~ Get payment codes
   getStudentPaymentCodes = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {

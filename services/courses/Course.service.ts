@@ -127,7 +127,12 @@ class CtrlCourseService {
     });
 
     // إزالة sessions و exams من النتيجة
-    const { sessions: _, exams: __, ...courseWithoutArrays } = course as any;
+    const {
+      sessions: _,
+      exams: __,
+      whatsapp: whatsappField,
+      ...courseWithoutArrays
+    } = course as any;
 
     const courseWithStats = {
       ...courseWithoutArrays,
@@ -146,6 +151,7 @@ class CtrlCourseService {
       totalFiles: totalFiles,
       // SECOND THING: Add first session separately
       firstSession: firstSession,
+      whatsapp: whatsappField,
     };
 
     const courseNotEnrolled = {

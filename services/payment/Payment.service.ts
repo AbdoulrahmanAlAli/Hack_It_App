@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 import crypto from "crypto";
 import {
   PaymentCode,
@@ -10,11 +9,14 @@ import { Course } from "../../models/courses/Course.model";
 import { Student } from "../../models/users/students/Student.model";
 import { BadRequestError, NotFoundError } from "../../middlewares/handleErrors";
 import { Enrollment } from "../../models/payment/enrollment/Enrollment.model";
+import { IAdmin } from "../../models/users/admins/dtos";
+import { Admin } from "../../models/users/admins/Admin.model";
 
 // Define proper types for the service methods
 interface GeneratePaymentData {
   universityNumber: number;
   courseId: string;
+  studentNumber: string;
 }
 
 interface VerifyPaymentData {
@@ -26,10 +28,19 @@ interface VerifyPaymentData {
 
 class PaymentService {
   // ~ POST /api/payment/code ~ Generate payment code
-  static async generatePaymentCode(paymentData: GeneratePaymentData) {
+  static async generatePaymentCode(
+    paymentData: GeneratePaymentData,
+    adminId: string
+  ) {
     const { error } = validateCreatePaymentCode(paymentData);
     if (error) {
       throw new BadRequestError(error.details[0].message);
+    }
+
+    // Get admin info to use as adminName
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      throw new NotFoundError("المسؤول غير موجود");
     }
 
     // Check if course exists and is not free
@@ -41,20 +52,20 @@ class PaymentService {
       throw new BadRequestError("هذا الكورس مجاني ولا يحتاج إلى دفع");
     }
 
-    // Check if student exists with this university number
+    // Check if student exists with this university number AND student number
     const student = await Student.findOne({
       universityNumber: paymentData.universityNumber,
+      userName: paymentData.studentNumber, // Changed to compare with userName
     });
     if (!student) {
-      throw new NotFoundError("الطالب غير موجود");
+      throw new NotFoundError("الطالب غير موجود أو رقم الطالب غير مطابق");
     }
 
     // Check if student is already enrolled
-    const existingEnrollment = await Enrollment.findOne({
-      studentId: student._id,
-      courseId: paymentData.courseId,
-    });
-    if (existingEnrollment) {
+    const isEnrolled = student.enrolledCourses.some(
+      (enrolledCourseId) => enrolledCourseId.toString() === paymentData.courseId
+    );
+    if (isEnrolled) {
       throw new BadRequestError("الطالب مسجل بالفعل في هذا الكورس");
     }
 
@@ -69,8 +80,10 @@ class PaymentService {
     const paymentCode = await PaymentCode.create({
       code: rawCode,
       universityNumber: paymentData.universityNumber,
-      courseId: new mongoose.Types.ObjectId(paymentData.courseId),
+      courseId: paymentData.courseId,
       studentId: student._id,
+      adminName: admin.userName, // Use admin's userName as adminName
+      studentNumber: paymentData.studentNumber,
       expiresAt,
     });
 
@@ -78,13 +91,15 @@ class PaymentService {
       message: "تم إنشاء كود الدفع بنجاح",
       code: rawCode, // Return the raw code only once
       expiresAt,
+      paymentCodeId: paymentCode._id,
+      adminName: admin.userName,
+      studentNumber: paymentData.studentNumber,
+      studentName: student.userName,
     };
   }
 
   // ~ POST /api/payment/verify ~ Verify and use payment code
-  static async verifyPaymentCode(
-    verificationData: VerifyPaymentData & { courseId: string }
-  ) {
+  static async verifyPaymentCode(verificationData: VerifyPaymentData) {
     const { error } = validateUsePaymentCode(verificationData);
     if (error) {
       throw new BadRequestError(error.details[0].message);
@@ -132,13 +147,14 @@ class PaymentService {
       throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
     }
 
-    // Check if the payment code is for the same course the student is trying to enroll in
+    // Check if the payment code is for the same course
     if (validPaymentCode.courseId.toString() !== verificationData.courseId) {
-      // Get the actual course info for better error message
-      const actualCourse = await Course.findById(validPaymentCode.courseId);
-      const courseName = actualCourse ? actualCourse.name : "غير معروف";
+      throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
+    }
 
-      throw new BadRequestError(`كود الدفع غير صحيح أو منتهي الصلاحية`);
+    // Verify student number matches the payment code
+    if (validPaymentCode.studentNumber !== student.userName) {
+      throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
     }
 
     // Check if already enrolled
@@ -146,7 +162,6 @@ class PaymentService {
       (enrolledCourseId) =>
         enrolledCourseId.toString() === verificationData.courseId
     );
-
     if (isEnrolled) {
       throw new BadRequestError("الطالب مسجل بالفعل في هذا الكورس");
     }
@@ -158,11 +173,12 @@ class PaymentService {
       await validPaymentCode.save();
 
       // Create enrollment
-      const enrollment = await Enrollment.create({
+      await Enrollment.create({
         studentId: student._id,
         courseId: verificationData.courseId,
         paymentCode: verificationData.code,
         enrolledAt: new Date(),
+        adminName: validPaymentCode.adminName,
       });
 
       // Add course to student's enrolled courses
@@ -182,6 +198,7 @@ class PaymentService {
           name: requestedCourse.name,
           image: requestedCourse.image,
         },
+        adminName: validPaymentCode.adminName,
       };
     } catch (error) {
       // If any operation fails, revert the payment code usage
@@ -200,7 +217,7 @@ class PaymentService {
       expiresAt: { $gt: new Date() },
     })
       .populate("courseId", "name image price")
-      .select("code used expiresAt courseId createdAt")
+      .select("code used expiresAt courseId adminName studentNumber createdAt")
       .sort({ createdAt: -1 });
 
     return {
@@ -209,6 +226,8 @@ class PaymentService {
         course: code.courseId,
         used: code.used,
         expiresAt: code.expiresAt,
+        adminName: code.adminName,
+        studentNumber: code.studentNumber,
         createdAt: code.createdAt,
       })),
     };
@@ -225,6 +244,37 @@ class PaymentService {
       .sort({ enrolledAt: -1 });
 
     return { enrollments };
+  }
+
+  // ~ GET /api/payment/codes/admin/:adminName ~ Get payment codes by admin
+  static async getPaymentCodesByAdmin(adminName: string) {
+    const paymentCodes = await PaymentCode.find({ adminName })
+      .populate("courseId", "name image price")
+      .populate("studentId", "userName email phoneNumber")
+      .select(
+        "code universityNumber used expiresAt courseId studentId studentNumber createdAt"
+      )
+      .sort({ createdAt: -1 });
+
+    return {
+      adminName,
+      paymentCodes: paymentCodes.map((code) => ({
+        _id: code._id,
+        code: code.code,
+        universityNumber: code.universityNumber,
+        course: code.courseId,
+        student: code.studentId,
+        studentNumber: code.studentNumber,
+        used: code.used,
+        expiresAt: code.expiresAt,
+        createdAt: code.createdAt,
+      })),
+      totalCodes: paymentCodes.length,
+      usedCodes: paymentCodes.filter((code) => code.used).length,
+      activeCodes: paymentCodes.filter(
+        (code) => !code.used && code.expiresAt > new Date()
+      ).length,
+    };
   }
 }
 

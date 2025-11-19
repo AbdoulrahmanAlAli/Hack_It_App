@@ -30,6 +30,15 @@ class QuestionService {
     const group = await Group.findById(questionData.groupId);
     if (!group) throw new NotFoundError("المجموعة غير موجودة");
 
+    if (group.mainTitle === null) {
+      const existingQuestions = await Question.find({
+        groupId: questionData.groupId,
+      });
+      if (existingQuestions.length >= 1) {
+        throw new BadRequestError("لا يمكن إضافة أكثر من سؤال واحد");
+      }
+    }
+
     // Validate that at least one answer is correct
     const hasCorrectAnswer = questionData.answers.some(
       (answer) => answer.correct
@@ -45,7 +54,18 @@ class QuestionService {
       image = file.path;
     }
 
-    const question = await Question.create({ ...questionData, image });
+    let totalMarkShare;
+    if (group.mainTitle === null) {
+      totalMarkShare = group.totalMark;
+    } else {
+      totalMarkShare = questionData.mark;
+    }
+
+    const question = await Question.create({
+      ...questionData,
+      image,
+      mark: totalMarkShare,
+    });
     await question.populate("groupId", "mainTitle");
 
     if (!question) throw new NotFoundError("فشل إنشاء السؤال");

@@ -26,6 +26,16 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
       ref: "Student",
       default: null,
     },
+    adminName: {
+      type: String,
+      required: [true, "اسم المسؤول مطلوب"],
+      trim: true,
+    },
+    studentNumber: {
+      type: String,
+      required: [true, "رقم الطالب مطلوب"],
+      trim: true,
+    },
     used: {
       type: Boolean,
       default: false,
@@ -36,7 +46,11 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
       index: { expires: 0 }
     },
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
 
 // Code encryption before saving
@@ -64,9 +78,12 @@ const PaymentCode: Model<IPaymentCode> = mongoose.model<IPaymentCode>(
 );
 
 // Indexes
-PaymentCodeSchema.index({createdAt: -1 });
+PaymentCodeSchema.index({ createdAt: -1 });
+PaymentCodeSchema.index({ universityNumber: 1 });
+PaymentCodeSchema.index({ courseId: 1 });
+PaymentCodeSchema.index({ adminName: 1 });
 
-// Validation: Create Payment Code - Accept string for courseId
+// Validation: Create Payment Code
 const validateCreatePaymentCode = (obj: any): joi.ValidationResult => {
   const schema = joi.object({
     universityNumber: joi.number().required().messages({
@@ -77,12 +94,20 @@ const validateCreatePaymentCode = (obj: any): joi.ValidationResult => {
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",
     }),
+    adminName: joi.string().required().messages({
+      "string.empty": "اسم المسؤول مطلوب",
+      "any.required": "اسم المسؤول مطلوب",
+    }),
+    studentNumber: joi.string().required().messages({
+      "string.empty": "رقم الطالب مطلوب",
+      "any.required": "رقم الطالب مطلوب",
+    }),
   });
 
   return schema.validate(obj);
 };
 
-// Validation: Use Payment Code - Accept string for code and universityNumber
+// Validation: Use Payment Code
 const validateUsePaymentCode = (obj: any): joi.ValidationResult => {
   const schema = joi.object({
     code: joi.string().required().messages({
@@ -93,10 +118,11 @@ const validateUsePaymentCode = (obj: any): joi.ValidationResult => {
       "number.base": "الرقم الجامعي يجب أن يكون رقمًا",
       "any.required": "الرقم الجامعي مطلوب",
     }),
-    studentId: joi.string().optional().messages({
-      "string.base": "معرف الطالب يجب أن يكون نصًا",
+    studentId: joi.string().required().messages({
+      "string.empty": "معرف الطالب مطلوب",
+      "any.required": "معرف الطالب مطلوب",
     }),
-       courseId: joi.string().required().messages({
+    courseId: joi.string().required().messages({
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",
     }),

@@ -44,7 +44,10 @@ class GroupBankService {
 
     const groupBank = await GroupBank.findById(id)
       .populate("contentId", "title")
-      .populate("questions");
+      .populate({
+        path: "questions",
+        options: { sort: { createdAt: -1 } }, // Optional: sort questions
+      });
     if (!groupBank) throw new NotFoundError("المجموعة غير موجودة");
 
     return groupBank;
@@ -58,13 +61,23 @@ class GroupBankService {
 
     const allGroupsBank = await GroupBank.find({ contentId })
       .populate("contentId", "title")
-      .populate("questions");
+      .populate({
+        path: "questions",
+        options: { sort: { createdAt: -1 } }, // Optional: sort questions
+      });
 
-    const limit: number = allGroupsBank.length;
+    if (allGroupsBank.length === 0) {
+      throw new NotFoundError("لا توجد مجموعات لهذا الامتحان");
+    }
 
     const shuffledGroupsBank = this.shuffleArray([...allGroupsBank]);
 
-    return shuffledGroupsBank;
+    const groupsWithAllQuestions = shuffledGroupsBank.map((group) => ({
+      ...group.toObject(),
+      questions: group.questions || [], // Ensure questions array exists
+    }));
+
+    return groupsWithAllQuestions;
   }
 
   // Update group Bank

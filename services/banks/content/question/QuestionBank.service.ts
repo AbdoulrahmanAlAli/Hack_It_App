@@ -33,6 +33,18 @@ class QuestionBankService {
     const group = await GroupBank.findById(questionData.groupBankId);
     if (!group) throw new NotFoundError("المجموعة غير موجودة");
 
+    if (group.mainTitle === null) {
+      const existingQuestions = await QuestionBank.find({
+        groupBankId: questionData.groupBankId,
+      });
+
+      if (existingQuestions.length >= 1) {
+        throw new BadRequestError(
+          "لا يمكن إضافة أكثر من سؤال واحد"
+        );
+      }
+    }
+
     // Validate that at least one answer is correct
     const hasCorrectAnswer = questionData.answers.some(
       (answer) => answer.correct
@@ -48,7 +60,18 @@ class QuestionBankService {
       image = file.path;
     }
 
-    const questionBank = await QuestionBank.create({ ...questionData, image });
+    let totalMarkShare;
+    if (group.mainTitle === null) {
+      totalMarkShare = group.totalMark;
+    } else {
+      totalMarkShare = questionData.mark;
+    }
+
+    const questionBank = await QuestionBank.create({
+      ...questionData,
+      image,
+      mark: totalMarkShare,
+    });
     await questionBank.populate("groupBankId", "mainTitle");
 
     if (!questionBank) throw new NotFoundError("فشل إنشاء السؤال");

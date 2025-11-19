@@ -289,7 +289,7 @@ class CtrlStudentController {
   addCourseAndSessionForStudent = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const user = (req as AuthenticatedRequest).user;
-      const { id, bankId, sessionId } = req.params;
+      const { id, courseId, sessionId } = req.params;
 
       if (user?.id !== id) {
         throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
@@ -297,7 +297,7 @@ class CtrlStudentController {
 
       const result = await CtrlStudentService.addCourseAndSessionForStudent(
         id,
-        bankId,
+        courseId,
         sessionId
       );
       res.status(200).json(result);

@@ -151,10 +151,6 @@ class PaymentService {
       throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
     }
 
-    // Verify student number matches the payment code
-    if (validPaymentCode.studentNumber !== student.userName) {
-      throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
-    }
 
     // Check if already enrolled
     const isEnrolled = student.enrolledCourses.some(

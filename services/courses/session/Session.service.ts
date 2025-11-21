@@ -13,6 +13,7 @@ import {
 import { ICloudinaryFile } from "../../../utils/types";
 import path from "path";
 import { number } from "joi";
+import { generateSignedUrl } from "../../../utils/wasabi.service";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -52,7 +53,25 @@ class CtrlSessionService {
     const session = await Session.findById(id);
 
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
-    return session;
+
+    // تحويل كائن Mongoose إلى كائن JavaScript عادي
+    const sessionObject = session.toObject();
+
+    if (sessionObject.video) {
+      // ✅ الحل باستخدام التفكيك: فصل video عن باقي البيانات
+      const { video, ...sessionData } = sessionObject;
+
+      // إنشاء الرابط الموقّع باستخدام المفتاح المفصول
+      const signedUrl = await generateSignedUrl(video, 600);
+
+      // إضافة الرابط الجديد إلى البيانات المتبقية
+      (sessionData as any).signedVideoUrl = signedUrl;
+
+      // إرجاع الكائن النظيف (الذي لا يحتوي على 'video')
+      return sessionData;
+    }
+
+    return sessionObject; // إرجاع الكائن بدون تعديل إذا لم يكن هناك فيديو
   }
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course

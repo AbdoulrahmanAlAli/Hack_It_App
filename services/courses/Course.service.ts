@@ -96,6 +96,15 @@ class CtrlCourseService {
 
     const teacherStats = await this.calculateTeacherStats(teacherId);
 
+    const totalDurationInSeconds = sessions.reduce((total, session) => {
+      const durationString = (session as any).duration || "0:00";
+      return total + this.parseDurationToSeconds(durationString);
+    }, 0);
+
+    const totalCourseDuration = this.formatSecondsToDuration(
+      totalDurationInSeconds
+    );
+
     // FIRST THING: Get total files count
     const totalFiles = sessions.reduce((total, session) => {
       return (
@@ -149,6 +158,7 @@ class CtrlCourseService {
       sessionsAndExams: allActivities,
       // FIRST THING: Add file count
       totalFiles: totalFiles,
+      totalCourseDuration: totalCourseDuration,
       // SECOND THING: Add first session separately
       firstSession: firstSession,
       whatsapp: whatsappField,
@@ -168,6 +178,7 @@ class CtrlCourseService {
       isDiscounted: course.discount?.dis || false,
       // FIRST THING: Add file count for non-enrolled too
       totalFiles: totalFiles,
+      totalCourseDuration: totalCourseDuration,
       // SECOND THING: Add first session for non-enrolled too
       firstSession: firstSession,
     };
@@ -299,6 +310,41 @@ class CtrlCourseService {
     return {
       averageRating: Math.round(averageRating * 10) / 10,
     };
+  }
+
+  // دالة مساعدة لتحويل تنسيق المدة (مثال: "5:00" أو "1:10:30") إلى ثواني إجمالية
+  static parseDurationToSeconds(duration: string): number {
+    const parts = duration.split(":").map((p) => parseInt(p, 10));
+    let totalSeconds = 0;
+
+    if (parts.length === 3) {
+      // HH:MM:SS
+      totalSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } else if (parts.length === 2) {
+      // MM:SS
+      totalSeconds = parts[0] * 60 + parts[1];
+    } else if (parts.length === 1) {
+      // SS (افتراضياً إذا كانت جزء واحد)
+      totalSeconds = parts[0];
+    }
+
+    return totalSeconds;
+  }
+
+  // دالة مساعدة لتحويل الثواني الإجمالية إلى تنسيق HH:MM:SS
+  static formatSecondsToDuration(totalSeconds: number): string {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const pad = (num: number) => num.toString().padStart(2, "0");
+
+    // يمكن تعديل التنسيق هنا حسب الرغبة (مثال: إظهار الساعات فقط إذا كانت > 0)
+    if (hours > 0) {
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    } else {
+      return `${pad(minutes)}:${pad(seconds)}`;
+    }
   }
 }
 

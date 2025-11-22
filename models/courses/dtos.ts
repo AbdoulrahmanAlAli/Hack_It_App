@@ -22,6 +22,7 @@ export interface ICourse extends Document {
   rating: number;
   about: string;
   available: boolean;
+  maintenance: boolean;
   video: string;
   free: boolean;
   students: Types.ObjectId[];

@@ -6,7 +6,9 @@ import { ctrlSessionController } from "../../../controllers/courses/session/Sess
 const router: Router = Router();
 
 // ~ POST /api/sessions - Create session (Admin/Teacher)
-router.route("/").post(ctrlSessionController.createSession);
+router
+  .route("/")
+  .post(verifyToken, checkRole(["admin"]), ctrlSessionController.createSession);
 
 // ~ GET /api/sessions/:id - Get session by ID (Public)
 router.route("/:id").get(verifyToken, ctrlSessionController.getSessionById);
@@ -17,10 +19,18 @@ router
   .get(verifyToken, ctrlSessionController.getSessionsByCourseId);
 
 // ~ PUT /api/sessions/:id - Update session (Admin/Teacher)
-router.route("/:id").put(ctrlSessionController.updateSession);
+router
+  .route("/:id")
+  .put(verifyToken, checkRole(["admin"]), ctrlSessionController.updateSession);
 
 // ~ DELETE /api/sessons/:id - Delete sesson (Admin/Teacher)
-router.route("/:id").delete(ctrlSessionController.deleteSession);
+router
+  .route("/:id")
+  .delete(
+    verifyToken,
+    checkRole(["admin"]),
+    ctrlSessionController.deleteSession
+  );
 
 // ~ PUT /api/sessons/:id/like - Like sesson (Student)
 router

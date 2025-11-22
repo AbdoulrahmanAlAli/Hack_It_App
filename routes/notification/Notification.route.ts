@@ -15,20 +15,43 @@ router
 // مسارات الطالب لإدارة FCM
 router
   .route("/fcm-token/:id")
-  .put(verifyToken, notificationController.updateFcmToken)
-  .delete(verifyToken, notificationController.removeFcmToken);
+  .put(verifyToken, checkRole(["admin"]), notificationController.updateFcmToken)
+  .delete(
+    verifyToken,
+    checkRole(["admin"]),
+    notificationController.removeFcmToken
+  );
 
 router
   .route("/settings/:id")
-  .put(verifyToken, notificationController.updateNotificationSettings);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    notificationController.updateNotificationSettings
+  );
 
 // مسارات الأدمن لإدارة الإشعارات العامة
-router.route("/public").post(notificationController.createPublicNotification);
+router
+  .route("/public")
+  .post(
+    verifyToken,
+    checkRole(["admin"]),
+    notificationController.createPublicNotification
+  );
 
 router
   .route("/public/test")
-  .post(notificationController.sendPublicTestNotification);
+  .post(
+    verifyToken,
+    checkRole(["admin"]),
+    notificationController.sendPublicTestNotification
+  );
 
-router.route("/stats").get(notificationController.getNotificationStats);
+router
+  .route("/stats")
+  .get(
+    verifyToken,
+    notificationController.getNotificationStats
+  );
 
 export default router;

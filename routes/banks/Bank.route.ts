@@ -13,15 +13,33 @@ router.route("/").get(verifyToken, ctrlBanksController.getAllBanks);
 router.route("/:id").get(verifyToken, ctrlBanksController.getSingleBank);
 
 // ~ Post => /api/hackit/ctrl/bank ~ Create New Bank
-router.route("/").post(upload, ctrlBanksController.createNewBank);
+router
+  .route("/")
+  .post(
+    verifyToken,
+    checkRole(["admin"]),
+    upload,
+    ctrlBanksController.createNewBank
+  );
 
 // ~ Put => /api/hackit/ctrl/bank/:id ~ Update Bank
-router.route("/:id").put(ctrlBanksController.updateBank);
+router
+  .route("/:id")
+  .put(verifyToken, checkRole(["admin"]), ctrlBanksController.updateBank);
 
 // ~ Delete => /api/hackit/ctrl/bank/:id ~ Delete Bank
-router.route("/:id").delete(ctrlBanksController.deleteBank);
+router
+  .route("/:id")
+  .delete(verifyToken, checkRole(["admin"]), ctrlBanksController.deleteBank);
 
 // ~ put => /api/hackit/ctrl/bank/:id/image ~ Update Image Bank
-router.route("/:id/image").put(upload, ctrlBanksController.updateImageBank);
+router
+  .route("/:id/image")
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    upload,
+    ctrlBanksController.updateImageBank
+  );
 
 export default router;

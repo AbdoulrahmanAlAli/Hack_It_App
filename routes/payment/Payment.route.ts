@@ -18,7 +18,9 @@ router
 router.route("/verify").post(verifyToken, paymentController.verifyPaymentCode);
 
 // ~ GET /api/payment/codes ~ Get all payment codes
-router.get("/codes", paymentController.getAllPaymentCodes);
+router
+  .route("/codes")
+  .get(verifyToken, checkRole(["admin"]), paymentController.getAllPaymentCodes);
 
 // ~ GET /api/payment/codes/:universityNumber ~ Get payment codes
 router

@@ -68,12 +68,20 @@ router
 // ~ Put => /api/hackit/ctrl/student/UpdateProfileImpStudentAdmin/:id ~ Change important details of student
 router
   .route("/updateprofileimpstudentadmin/:id")
-  .put(ctrlStudentController.UpdateProfileImpStudentAdmin);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    ctrlStudentController.UpdateProfileImpStudentAdmin
+  );
 
 // ~ Put => /api/hackit/ctrl/student/UpdateProfileSuspendedStudent/:id ~ Change Suspended of student
 router
   .route("/UpdateProfileSuspendedStudent/:id")
-  .put(ctrlStudentController.UpdateProfileSuspendedStudent);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    ctrlStudentController.UpdateProfileSuspendedStudent
+  );
 
 // ~ Put => /api/hackit/ctrl/student/updateimageprofile/:id ~ Change Image of student
 router

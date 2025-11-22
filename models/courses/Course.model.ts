@@ -109,6 +109,10 @@ const CourseSchema = new Schema<ICourse>(
       type: Boolean,
       default: false,
     },
+    maintenance: {
+      type: Boolean,
+      default: false,
+    },
     students: [
       {
         type: Schema.Types.ObjectId,
@@ -345,6 +349,9 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
       "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
     }),
     available: joi.boolean().messages({
+      "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
+    }),
+    maintenance: joi.boolean().messages({
       "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
     }),
   });

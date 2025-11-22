@@ -3,19 +3,20 @@ import { Router } from "express";
 import { adsController } from "../../controllers/ads/Ads.controller";
 import upload from "../../middlewares/cloudinary";
 import verifyToken from "../../middlewares/verifyToken";
+import checkRole from "../../middlewares/checkRole";
 
 const router: Router = Router();
 
 // Protected admin routes
 router
   .route("/")
-  .get(adsController.getAllAds)
-  .post(upload, adsController.createAds);
+  .get(verifyToken, adsController.getAllAds)
+  .post(verifyToken, checkRole(["admin"]), upload, adsController.createAds);
 
 router
   .route("/:id")
   .get(verifyToken, adsController.getAdsById)
-  .put(upload, adsController.updateAds)
-  .delete(adsController.deleteAds);
+  .put(verifyToken, checkRole(["admin"]), upload, adsController.updateAds)
+  .delete(verifyToken, checkRole(["admin"]), adsController.deleteAds);
 
 export default router;

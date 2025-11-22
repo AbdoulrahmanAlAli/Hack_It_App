@@ -6,7 +6,9 @@ import { examController } from "../../../controllers/courses/exam/Exam.controlle
 const router: Router = Router();
 
 // POST /api/exams - Create exam (Admin/Teacher)
-router.route("/").post(examController.createExam);
+router
+  .route("/")
+  .post(verifyToken, checkRole(["admin"]), examController.createExam);
 
 // GET /api/exams/:id - Get exam by ID (Public)
 router.route("/:id").get(verifyToken, examController.getExamById);
@@ -17,9 +19,13 @@ router
   .get(verifyToken, examController.getExamsByCourseId);
 
 // PUT /api/exams/:id - Update exam (Admin/Teacher)
-router.route("/:id").put(examController.updateExam);
+router
+  .route("/:id")
+  .put(verifyToken, checkRole(["admin"]), examController.updateExam);
 
 // DELETE /api/exams/:id - Delete exam (Admin/Teacher)
-router.route("/:id").delete(examController.deleteExam);
+router
+  .route("/:id")
+  .delete(verifyToken, checkRole(["admin"]), examController.deleteExam);
 
 export default router;

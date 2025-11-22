@@ -1,56 +1,96 @@
 import { Router } from "express";
 import { teacherController } from "../../../controllers/users/teachers/Teacher.controller";
 import upload from "../../../middlewares/cloudinary";
+import checkRole from "../../../middlewares/checkRole";
+import verifyToken from "../../../middlewares/verifyToken";
 
 const router: Router = Router();
 
 // ~ Get => /api/hackit/ctrl/teacher/accountprofileteacher/:id
 router
   .route("/accountprofileteacher/:id")
-  .get(teacherController.getProfileTeacher);
+  .get(verifyToken, checkRole(["admin"]), teacherController.getProfileTeacher);
 
 // ~ Get => /api/hackit/ctrl/teacher
 router
   .route("")
-  .get(teacherController.getTeachers);
-
-// ~ Post => /api/hackit/ctrl/teacher/sendemailpassword
-router
-  .route("/sendemailpassword")
-  .post(teacherController.SendEmailForPasswordTeacher);
+  .get(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.SendEmailForPasswordTeacher
+  );
 
 // ~ Post => /api/hackit/ctrl/teacher/forgetPass/:id
-router.route("/forgetPass/:id").post(teacherController.ForgetPasswordTeacher);
+router
+  .route("/forgetPass/:id")
+  .post(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.ForgetPasswordTeacher
+  );
 
 // ~ Put => /api/hackit/ctrl/teacher/changepass/:id
-router.route("/changepass/:id").put(teacherController.ChagePasswordTeacher);
+router
+  .route("/changepass/:id")
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.ChagePasswordTeacher
+  );
 
 // ~ Put => /api/hackit/ctrl/teacher/updatedetailsprofile/:id
 router
   .route("/updatedetailsprofile/:id")
-  .put(teacherController.UpdateProfileTeacher);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.UpdateProfileTeacher
+  );
 
 // ~ Put => /api/hackit/ctrl/teacher/UpdateProfileSuspendedTeacher/:id
 router
   .route("/UpdateProfileSuspendedTeacher/:id")
-  .put(teacherController.UpdateProfileSuspendedTeacher);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.UpdateProfileSuspendedTeacher
+  );
 
 // ~ Put => /api/hackit/ctrl/teacher/UpdateProfileImpTeacherAdmin/:id
 router
   .route("/UpdateProfileImpTeacherAdmin/:id")
-  .put(teacherController.UpdateProfileImpTeacherAdmin);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.UpdateProfileImpTeacherAdmin
+  );
 
 // ~ Put => /api/hackit/ctrl/teacher/updateimageprofile/:id
 router
   .route("/updateimageprofile/:id")
-  .put(upload, teacherController.UpdateImageProfileTeacher);
+  .put(
+    verifyToken,
+    checkRole(["admin"]),
+    upload,
+    teacherController.UpdateImageProfileTeacher
+  );
 
 // ~ Delete => /api/hackit/ctrl/teacher/account/:id
-router.route("/account/:id").delete(teacherController.DeleteTeacherAccount);
+router
+  .route("/account/:id")
+  .delete(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.DeleteTeacherAccount
+  );
 
 // ~ Patch => /api/hackit/ctrl/teacher/removeStudent/course/:courseId/:teacherId
 router
   .route("/removeStudent/course/:courseId/:teacherId")
-  .patch(teacherController.RemoveStudentFromCourse);
+  .patch(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.RemoveStudentFromCourse
+  );
 
 export default router;

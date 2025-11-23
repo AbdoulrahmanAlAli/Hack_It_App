@@ -14,6 +14,7 @@ import { ICloudinaryFile } from "../../../utils/types";
 import path from "path";
 import { number } from "joi";
 import { generateSignedUrl } from "../../../utils/wasabi.service";
+import { Exam } from "../../../models/courses/exam/Exam.model";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -33,11 +34,19 @@ class CtrlSessionService {
       throw new BadRequestError("الجلسة موجودة بالفعل");
     }
 
-    const numberHave = await Session.find({
+    const sessionWithSameNumber = await Session.findOne({
       courseId: sessionData.courseId,
       number: sessionData.number,
     });
-    if (!numberHave) {
+    if (!sessionWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
+    }
+
+    const examWithSameNumber = await Exam.findOne({
+      courseId: sessionData.courseId,
+      number: sessionData.number,
+    });
+    if (!examWithSameNumber) {
       throw new BadRequestError("الرقم موجود بالفعل");
     }
 
@@ -94,6 +103,22 @@ class CtrlSessionService {
     const sessionHave = await Session.findById(id);
     if (!sessionHave) {
       throw new NotFoundError("الحلسة غير موجوة");
+    }
+
+    const examWithSameNumber = await Exam.findOne({
+      courseId: sessionData.courseId,
+      number: sessionData.number,
+    });
+    if (!examWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
+    }
+
+    const sessionWithSameNumber = await Session.findOne({
+      courseId: sessionData.courseId,
+      number: sessionData.number,
+    });
+    if (!sessionWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
     }
 
     const updatedSession = await Session.findByIdAndUpdate(id, sessionData, {

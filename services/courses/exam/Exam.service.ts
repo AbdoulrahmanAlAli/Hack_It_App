@@ -10,6 +10,7 @@ import {
   validateCreateExam,
   validateUpdateExam,
 } from "../../../models/courses/exam/Exam.model";
+import { Session } from "../../../models/courses/session/Session.model";
 
 class ExamService {
   // Create new exam
@@ -21,11 +22,19 @@ class ExamService {
     const course = await Course.findById(examData.courseId);
     if (!course) throw new NotFoundError("الكورس غير موجود");
 
-    const numberHave = await Exam.find({
+    const examWithSameNumber = await Exam.findOne({
       courseId: examData.courseId,
       number: examData.number,
     });
-    if (!numberHave) {
+    if (!examWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
+    }
+
+    const sessionWithSameNumber = await Session.findOne({
+      courseId: examData.courseId,
+      number: examData.number,
+    });
+    if (!sessionWithSameNumber) {
       throw new BadRequestError("الرقم موجود بالفعل");
     }
 
@@ -59,6 +68,22 @@ class ExamService {
     const examHave = await Exam.findById(examId);
     if (!examHave) {
       throw new NotFoundError("الاختبار غير موجود");
+    }
+
+    const examWithSameNumber = await Exam.findOne({
+      courseId: updateData.courseId,
+      number: updateData.number,
+    });
+    if (!examWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
+    }
+
+    const sessionWithSameNumber = await Session.findOne({
+      courseId: updateData.courseId,
+      number: updateData.number,
+    });
+    if (!sessionWithSameNumber) {
+      throw new BadRequestError("الرقم موجود بالفعل");
     }
 
     const exam = await Exam.findByIdAndUpdate(examId, updateData, {

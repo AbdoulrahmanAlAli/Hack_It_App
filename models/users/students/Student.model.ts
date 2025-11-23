@@ -210,12 +210,6 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
       .string()
       .pattern(/^09[0-9]{8}$/)
       .required()
-      .messages({
-        "string.pattern.base":
-          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
-        "string.empty": "رقم الهاتف مطلوب",
-        "any.required": "رقم الهاتف مطلوب",
-      }),
     gender: joi.string().valid("ذكر", "انثى").required().messages({
       "any.only": "يحب أن يكون ذكر أو انثى",
       "any.required": "نوع الجنس مطلوب",

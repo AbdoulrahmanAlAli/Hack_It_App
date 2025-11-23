@@ -22,11 +22,6 @@ const StudentSchema = new Schema<IStudent>(
       type: String,
       required: [true, "رقم الهاتف مطلوب"],
       trim: true,
-      validate: {
-        validator: (v) => /^09[0-9]{8}$/.test(v),
-        message: (props) =>
-          `${props.value} ليس رقم هاتف صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.`,
-      },
     },
     academicYear: {
       type: String,
@@ -206,10 +201,10 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
       "string.max": "الاسم الكامل يجب ألا يتجاوز 100 حرف",
       "any.required": "الاسم الكامل مطلوب",
     }),
-    phoneNumber: joi
-      .string()
-      .pattern(/^09[0-9]{8}$/)
-      .required(),
+    phoneNumber: joi.string().required().messages({
+      "string.empty": "الرقم مطلوب",
+      "any.required": "الرقم مطلوب",
+    }),
     gender: joi.string().valid("ذكر", "انثى").required().messages({
       "any.only": "يحب أن يكون ذكر أو انثى",
       "any.required": "نوع الجنس مطلوب",
@@ -332,15 +327,12 @@ const validateUpdateStudent = (
       "string.max": "الاسم الكامل يجب ألا يتجاوز 100 حرف",
       "any.required": "الاسم الكامل مطلوب",
     }),
-    phoneNumber: joi
-      .string()
-      .pattern(/^09[0-9]{8}$/)
-      .messages({
-        "string.pattern.base":
-          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
-        "string.empty": "رقم الهاتف مطلوب",
-        "any.required": "رقم الهاتف مطلوب",
-      }),
+    phoneNumber: joi.string().messages({
+      "string.empty": "الرقم مطلوب",
+    }),
+    universityNumber: joi.number().messages({
+      "string.empty": "الرقم الجامعي مطلوب",
+    }),
   });
 
   return schema.validate(obj);
@@ -356,15 +348,9 @@ const validateUpdateImportantStudent = (
       "string.max": "الاسم الكامل يجب ألا يتجاوز 100 حرف",
       "any.required": "الاسم الكامل مطلوب",
     }),
-    phoneNumber: joi
-      .string()
-      .pattern(/^09[0-9]{8}$/)
-      .messages({
-        "string.pattern.base":
-          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
-        "string.empty": "رقم الهاتف مطلوب",
-        "any.required": "رقم الهاتف مطلوب",
-      }),
+    phoneNumber: joi.string().messages({
+      "string.empty": "الرقم مطلوب",
+    }),
     academicYear: joi
       .string()
       .valid(
@@ -392,8 +378,8 @@ const validateUpdateImportantStudent = (
       "string.max": "البريد الإلكتروني يجب ألا يتجاوز 100 حرف",
       "any.required": "البريد الإلكتروني مطلوب",
     }),
-       device_id: joi.string().messages({
-      "string.empty": "device_Id is required"
+    device_id: joi.string().messages({
+      "string.empty": "device_Id is required",
     }),
   });
 

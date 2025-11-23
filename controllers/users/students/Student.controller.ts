@@ -8,6 +8,22 @@ import {
 } from "../../../middlewares/handleErrors";
 
 class CtrlStudentController {
+  // ~ Get => /api/hackit/ctrl/student ~ Get All Student
+  getAllStudents = asyncHandler(async (req: Request, res: Response) => {
+    const { universityNumber } = req.query;
+
+    let universityNumberFilter: number | undefined;
+
+    if (universityNumber) {
+      universityNumberFilter = parseInt(universityNumber as string);
+    }
+
+    const result = await CtrlStudentService.getAllStudents(
+      universityNumberFilter
+    );
+    res.status(200).json(result);
+  });
+
   // ~ Get => /api/hackit/ctrl/student/accountprofilestudent/:id ~ Get Profile Student
   getProfileStudent = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {

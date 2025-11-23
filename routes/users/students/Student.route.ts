@@ -6,8 +6,12 @@ import upload from "../../../middlewares/cloudinary";
 
 const router: Router = Router();
 
-// ~ Get => /api/hackit/ctrl/student/accountprofilestudent/:id ~ Get Profile Student
+// ~ Get => /api/hackit/ctrl/student ~ Get all students
+router
+  .route("/")
+  .get(verifyToken, checkRole(["admin"]), ctrlStudentController.getAllStudents);
 
+// ~ Get => /api/hackit/ctrl/student/accountprofilestudent/:id ~ Get Profile Student
 router
   .route("/accountprofilestudent/:id")
   .get(

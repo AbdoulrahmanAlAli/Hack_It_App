@@ -39,13 +39,18 @@ class AuthStudentService {
       await Student.findByIdAndDelete(existingInactiveByPhoneNumber._id);
     }
 
-    const [existingByPhone, existingByEmail] = await Promise.all([
-      Student.findOne({
-        phoneNumber: studentData.phoneNumber,
-        available: true,
-      }),
-      Student.findOne({ email: studentData.email, available: true }),
-    ]);
+    const [existingByPhone, existingByEmail, existingByUniversityNumber] =
+      await Promise.all([
+        Student.findOne({
+          phoneNumber: studentData.phoneNumber,
+          available: true,
+        }),
+        Student.findOne({ email: studentData.email, available: true }),
+        Student.findOne({
+          universityNumber: studentData.universityNumber,
+          available: true,
+        }),
+      ]);
 
     if (existingByPhone) {
       throw new BadRequestError("رقم الهاتف مسجل مسبقاً");
@@ -53,6 +58,10 @@ class AuthStudentService {
 
     if (existingByEmail) {
       throw new BadRequestError("البريد الإلكتروني مسجل مسبقاً");
+    }
+
+    if (existingByUniversityNumber) {
+      throw new BadRequestError("الرقم الجامعي مسجل مسبقاً");
     }
 
     const otp = OTPUtils.generateOTP();
@@ -148,19 +157,20 @@ class AuthStudentService {
     }
 
     if (existingInStudent.device_id != studentData.device_id) {
-
       await Student.findByIdAndUpdate(
-      existingInStudent.id,
-      {
-        $set: {
-          suspended: true,
-          suspensionReason: "تسجيل الدخول من غير حساب",
+        existingInStudent.id,
+        {
+          $set: {
+            suspended: true,
+            suspensionReason: "تسجيل الدخول من غير حساب",
+          },
         },
-      },
-      { new: true, runValidators: true }
-    );
+        { new: true, runValidators: true }
+      );
 
-      throw new BadRequestError("يتم تسجيل الدخول من غير جهاز, تم تقييد الحساب, يرجى التواصل معنا");
+      throw new BadRequestError(
+        "يتم تسجيل الدخول من غير جهاز, تم تقييد الحساب, يرجى التواصل معنا"
+      );
     }
 
     const token = generateJWT({

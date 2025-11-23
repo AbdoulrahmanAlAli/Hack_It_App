@@ -17,6 +17,7 @@ const PaymentCodeSchema = new Schema<IPaymentCode>(
     },
     price: {
       type: Number,
+      required: [true, "سعر الكورس مطلوب"],
     },
     courseId: {
       type: Schema.Types.ObjectId,
@@ -94,6 +95,10 @@ const validateCreatePaymentCode = (obj: any): joi.ValidationResult => {
     courseId: joi.string().required().messages({
       "string.empty": "معرف الكورس مطلوب",
       "any.required": "معرف الكورس مطلوب",
+    }),
+    price: joi.string().required().messages({
+      "string.empty": "سعر الكورس مطلوب",
+      "any.required": "سعر الكورس مطلوب",
     }),
   });
 

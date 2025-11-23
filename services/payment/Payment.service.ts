@@ -17,6 +17,7 @@ interface GeneratePaymentData {
   universityNumber: number;
   courseId: string;
   studentNumber: string;
+  price: string;
 }
 
 interface VerifyPaymentData {
@@ -68,8 +69,20 @@ class PaymentService {
       throw new BadRequestError("الطالب مسجل بالفعل في هذا الكورس");
     }
 
-    // Generate random code (6 digits)
-    const rawCode = crypto.randomInt(100000, 999999).toString();
+    // Generate secure random alphanumeric code (12 characters)
+    const generateSecureCode = (length: number): string => {
+      const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const randomValues = crypto.randomBytes(length);
+      let result = "";
+
+      for (let i = 0; i < length; i++) {
+        result += charset[randomValues[i] % charset.length];
+      }
+
+      return result;
+    };
+
+    const rawCode = generateSecureCode(12);
 
     // Set expiration to 24 hours from now
     const expiresAt = new Date();
@@ -80,6 +93,7 @@ class PaymentService {
       code: rawCode,
       universityNumber: paymentData.universityNumber,
       courseId: paymentData.courseId,
+      price: paymentData.price,
       studentId: student._id,
       adminName: admin.userName, // Use admin's userName as adminName
       studentNumber: student.phoneNumber,
@@ -151,7 +165,6 @@ class PaymentService {
       throw new BadRequestError("كود الدفع غير صحيح أو منتهي الصلاحية");
     }
 
-
     // Check if already enrolled
     const isEnrolled = student.enrolledCourses.some(
       (enrolledCourseId) =>
@@ -216,7 +229,7 @@ class PaymentService {
       .sort({ createdAt: -1 });
 
     return {
-      paymentCodes
+      paymentCodes,
     };
   }
 

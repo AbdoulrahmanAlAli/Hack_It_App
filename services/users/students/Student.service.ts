@@ -25,6 +25,24 @@ import { Content } from "../../../models/banks/content/Content.model";
 import { Exam } from "../../../models/courses/exam/Exam.model";
 
 class CtrlStudentService {
+  // ~ Get => /api/hackit/ctrl/student ~ Get All Student
+  static async getAllStudents(universityNumber?: number) {
+    const query: any = {};
+
+    if (universityNumber) {
+      query.universityNumber = universityNumber;
+    }
+
+    const students = await Student.find(query)
+      .select(
+        "userName phoneNumber email universityNumber academicYear gender birth profilePhoto available suspended enrolledCourses createdAt"
+      )
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return students;
+  }
+
   // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
   static async getProfileStudent(id: string) {
     const existingInactiveById = await Student.findById(id);
@@ -362,7 +380,7 @@ class CtrlStudentService {
           gender: studentData.gender,
           birth: studentData.birth,
           email: studentData.email,
-          device_id: studentData.device_id
+          device_id: studentData.device_id,
         },
       },
       { new: true, runValidators: true }

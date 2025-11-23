@@ -209,7 +209,7 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
     phoneNumber: joi
       .string()
       .pattern(/^09[0-9]{8}$/)
-      .required()
+      .required(),
     gender: joi.string().valid("ذكر", "انثى").required().messages({
       "any.only": "يحب أن يكون ذكر أو انثى",
       "any.required": "نوع الجنس مطلوب",

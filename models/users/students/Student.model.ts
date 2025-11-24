@@ -330,9 +330,18 @@ const validateUpdateStudent = (
     phoneNumber: joi.string().messages({
       "string.empty": "الرقم مطلوب",
     }),
-    universityNumber: joi.number().messages({
-      "string.empty": "الرقم الجامعي مطلوب",
-    }),
+    academicYear: joi
+      .string()
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      }),
   });
 
   return schema.validate(obj);

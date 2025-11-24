@@ -71,7 +71,7 @@ class CtrlSessionService {
       const { video, ...sessionData } = sessionObject;
 
       // إنشاء الرابط الموقّع باستخدام المفتاح المفصول
-      const signedUrl = await generateSignedUrl(video, 600);
+      const signedUrl = await generateSignedUrl(video, 3600);
 
       // إضافة الرابط الجديد إلى البيانات المتبقية
       (sessionData as any).signedVideoUrl = signedUrl;

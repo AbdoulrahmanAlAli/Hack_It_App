@@ -21,6 +21,10 @@ const ExamSchema = new Schema<IExam>(
       trim: true,
       maxlength: [100, "العنوان يجب ألا يتجاوز 100 حرف"],
     },
+    totalMark: {
+      type: Number,
+      required: [true, "العلامة الإجمالية مطلوبة"],
+    },
     duration: {
       type: String,
       required: [true, "المدة بالدقائق مطلوبة"],
@@ -70,6 +74,10 @@ const validateCreateExam = (obj: IExam): joi.ValidationResult => {
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "عنوان الامتحان مطلوب",
     }),
+    totalMark: joi.number().required().messages({
+      "number.empty": "العلامة الإجمالية مطلوبة",
+      "any.required": "العلامة الإجمالية مطلوبة",
+    }),
     duration: joi
       .string()
       .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
@@ -95,6 +103,9 @@ const validateUpdateExam = (obj: Partial<IExam>): joi.ValidationResult => {
     title: joi.string().max(100).messages({
       "string.empty": "عنوان الامتحان مطلوب",
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
+    }),
+    totalMark: joi.number().messages({
+      "number.empty": "العلامة الإجمالية مطلوبة",
     }),
     duration: joi
       .string()

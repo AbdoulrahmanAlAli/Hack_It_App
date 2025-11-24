@@ -19,7 +19,7 @@ const wasabiClient = new S3Client({
 
 export async function generateSignedUrl(
   key: string,
-  expiresIn: number = 600
+  expiresIn: number = 3600
 ): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: WASABI_BUCKET_NAME,

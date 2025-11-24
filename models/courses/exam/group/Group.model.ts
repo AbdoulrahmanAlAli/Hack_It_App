@@ -17,7 +17,7 @@ const GroupSchema = new Schema<IGroup>(
     },
     totalMark: {
       type: Number,
-      required: [true, "العلامة الإجمالية مطلوبة"],
+      required: [true, "علامة الفروب مطلوبة"],
     },
   },
   {
@@ -68,8 +68,8 @@ const validateCreateGroup = (obj: IGroup): joi.ValidationResult => {
         "alternatives.types": "العنوان الرئيسي يجب أن يكون نصاً أو فارغاً",
       }),
     totalMark: joi.number().required().messages({
-      "number.empty": "العلامة الإجمالية مطلوبة",
-      "any.required": "العلامة الإجمالية مطلوبة",
+      "number.empty": "علامة الفروب مطلوبة",
+      "any.required": "علامة الفروب مطلوبة",
     }),
   });
 
@@ -89,7 +89,7 @@ const validateUpdateGroup = (obj: Partial<IGroup>): joi.ValidationResult => {
         "alternatives.types": "العنوان الرئيسي يجب أن يكون نصاً أو فارغاً",
       }),
     totalMark: joi.number().messages({
-      "number.empty": "العلامة الإجمالية مطلوبة",
+      "number.empty": "علامة الفروب مطلوبة",
     }),
   });
 

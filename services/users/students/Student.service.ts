@@ -313,6 +313,9 @@ class CtrlStudentService {
     studentData: IStudent,
     id: string
   ) {
+
+    console.log('here')
+    
     const { error } = validateUpdateSuspendedStudent(studentData);
     if (error) {
       throw new BadRequestError(error.details[0].message);

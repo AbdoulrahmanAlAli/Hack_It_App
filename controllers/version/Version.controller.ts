@@ -14,18 +14,6 @@ class VersionController {
     res.status(200).json(version);
   });
 
-  // التحقق من الإصدار
-  checkVersion = asyncHandler(async (req: Request, res: Response) => {
-    const { version } = req.query;
-
-    if (!version) {
-      throw new BadRequestError("رقم الإصدار مطلوب");
-    }
-
-    const result = await VersionService.checkVersion(version as string);
-    res.status(200).json(result);
-  });
-
   // إنشاء إصدار جديد
   createVersion = asyncHandler(async (req: Request, res: Response) => {
     const { version } = req.body;

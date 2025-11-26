@@ -1,9 +1,14 @@
-import { NotFoundError } from "../../middlewares/handleErrors";
+import mongoose from "mongoose";
+import { BadRequestError, NotFoundError } from "../../middlewares/handleErrors";
 import { IVersion } from "../../models/version/dtos";
-import { Version } from "../../models/version/Version.model";
+import {
+  Version,
+  validateCreateVersion,
+  validateUpdateVersion,
+} from "../../models/version/Version.model";
 
 class VersionService {
-  // جلب الإصدار الحالي
+  // Get current version (latest)
   static async getCurrentVersion() {
     const version = await Version.findOne().sort({ createdAt: -1 });
 
@@ -14,57 +19,73 @@ class VersionService {
     return version;
   }
 
-  // إنشاء إصدار جديد
+  // Create new version
   static async createVersion(versionData: IVersion) {
-    const version = new Version({
+    const { error } = validateCreateVersion(versionData);
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
+
+    // Check if version already exists
+    const existingVersion = await Version.findOne({
+      version: versionData.version,
+    });
+
+    if (existingVersion) {
+      throw new BadRequestError("رقم الإصدار موجود مسبقاً");
+    }
+
+    const version = await Version.create({
       version: versionData.version,
       url: versionData.url,
     });
 
-    await version.save();
-    return version;
+    return {
+      message: "تم إنشاء الإصدار بنجاح",
+    };
   }
 
-  // جلب جميع الإصدارات
-  static async getAllVersions(page: number = 1, limit: number = 20) {
+  // Get all versions with pagination
+  static async getAllVersions(
+    page: number = 1,
+    limit: number = 20,
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
+  ) {
     const skip = (page - 1) * limit;
+    const sort: any = { [sortBy]: sortOrder === "desc" ? -1 : 1 };
 
     const versions = await Version.find()
-      .sort({ createdAt: -1 })
+      .sort(sort)
       .skip(skip)
       .limit(limit)
+      .select("version url createdAt updatedAt")
       .lean();
 
     const total = await Version.countDocuments();
+    const totalPages = Math.ceil(total / limit);
 
     return {
       versions,
       pagination: {
-        page,
+        currentPage: page,
+        totalPages,
+        totalCount: total,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
         limit,
-        total,
-        pages: Math.ceil(total / limit),
       },
     };
   }
 
-  // جلب إصدار معين
+  // Get version by ID
   static async getVersionById(versionId: string) {
-    const version = await Version.findById(versionId);
-
-    if (!version) {
-      throw new NotFoundError("الإصدار غير موجود");
+    if (!mongoose.Types.ObjectId.isValid(versionId)) {
+      throw new BadRequestError("معرف الإصدار غير صالح");
     }
 
-    return version;
-  }
-
-  // تحديث إصدار
-  static async updateVersion(versionId: string, versionData: IVersion) {
-    const version = await Version.findByIdAndUpdate(
-      versionId,
-      { version: versionData.version, url: versionData.url },
-      { new: true, runValidators: true }
+    const version = await Version.findById(versionId).select(
+      "version url createdAt updatedAt"
     );
 
     if (!version) {
@@ -74,27 +95,66 @@ class VersionService {
     return version;
   }
 
-  // حذف إصدار
+  // Update version
+  static async updateVersion(
+    versionId: string,
+    versionData: Partial<IVersion>
+  ) {
+    const { error } = validateUpdateVersion(versionData);
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(versionId)) {
+      throw new BadRequestError("معرف الإصدار غير صالح");
+    }
+
+    // Check if version number already exists (if updating version)
+    if (versionData.version) {
+      const existingVersion = await Version.findOne({
+        version: versionData.version,
+        _id: { $ne: versionId },
+      });
+
+      if (existingVersion) {
+        throw new BadRequestError("رقم الإصدار موجود مسبقاً");
+      }
+    }
+
+    const version = await Version.findByIdAndUpdate(versionId, versionData, {
+      new: true,
+      runValidators: true,
+    }).select("version url createdAt updatedAt");
+
+    if (!version) {
+      throw new NotFoundError("الإصدار غير موجود");
+    }
+
+    return {
+      message: "تم تحديث الإصدار بنجاح",
+      version,
+    };
+  }
+
+  // Delete version
   static async deleteVersion(versionId: string) {
+    if (!mongoose.Types.ObjectId.isValid(versionId)) {
+      throw new BadRequestError("معرف الإصدار غير صالح");
+    }
+
     const version = await Version.findByIdAndDelete(versionId);
 
     if (!version) {
       throw new NotFoundError("الإصدار غير موجود");
     }
 
-    return { success: true, message: "تم حذف الإصدار بنجاح" };
-  }
-
-  // التحقق من الإصدار
-  static async checkVersion(versionToCheck: string) {
-    const currentVersion = await this.getCurrentVersion();
-
-    const isLatest = currentVersion.version === versionToCheck;
+    // Check if there are any versions left
+    const remainingVersions = await Version.countDocuments();
 
     return {
-      isLatest,
-      currentVersion: currentVersion.version,
-      needsUpdate: !isLatest,
+      message: "تم حذف الإصدار بنجاح",
+      remainingVersions,
+      isLastVersion: remainingVersions === 0,
     };
   }
 }

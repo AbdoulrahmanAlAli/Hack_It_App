@@ -11,10 +11,6 @@ router
   .route("/current")
   .get(verifyToken, versionController.getCurrentVersion);
 
-router
-  .route("/check")
-  .get(verifyToken, checkRole(["admin"]), versionController.checkVersion);
-
 // Protected admin routes
 router
   .route("/")

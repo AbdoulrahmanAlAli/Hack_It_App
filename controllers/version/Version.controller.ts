@@ -16,19 +16,10 @@ class VersionController {
 
   // إنشاء إصدار جديد
   createVersion = asyncHandler(async (req: Request, res: Response) => {
-    const { version } = req.body;
-
-    const { error } = validateCreateVersion({ version } as any);
-    if (error) {
-      throw new BadRequestError(error.details[0].message);
-    }
-
-    const newVersion = await VersionService.createVersion(version);
+    const newVersion = await VersionService.createVersion(req.body);
 
     res.status(201).json({
-      success: true,
-      message: "تم إنشاء الإصدار بنجاح",
-      version: newVersion,
+      message: "تم إنشاء الإصدار بنجاح"
     });
   });
 

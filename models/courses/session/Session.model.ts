@@ -44,9 +44,9 @@ const SessionSchema = new Schema<ISession>(
     },
     files: [
       {
-        url: { type: String, required: true },
-        name: { type: String, required: true },
-        type: { type: String, required: true },
+        type: Schema.Types.ObjectId,
+        ref: "File",
+        default: [],
       },
     ],
     duration: {
@@ -58,7 +58,7 @@ const SessionSchema = new Schema<ISession>(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // Session Model
@@ -91,47 +91,6 @@ const validateCreateSession = (obj: ISession): joi.ValidationResult => {
     note: joi.string().max(500).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 500 حرف",
     }),
-    files: joi
-      .array()
-      .items(
-        joi.object({
-          url: joi.string().uri().required().messages({
-            "string.empty": "رابط الملف مطلوب",
-            "string.uri": "يجب أن يكون رابط الملف صالحاً",
-            "any.required": "رابط الملف مطلوب",
-          }),
-          name: joi.string().required().messages({
-            "string.empty": "اسم الملف مطلوب",
-            "any.required": "اسم الملف مطلوب",
-          }),
-          type: joi
-            .string()
-            .valid(
-              "pdf",
-              "doc",
-              "docx",
-              "xls",
-              "xlsx",
-              "ppt",
-              "pptx",
-              "jpg",
-              "jpeg",
-              "png",
-              "mp4",
-              "avi",
-              "mov"
-            )
-            .required()
-            .messages({
-              "string.empty": "نوع الملف مطلوب",
-              "any.only": "نوع الملف غير مدعوم",
-              "any.required": "نوع الملف مطلوب",
-            }),
-        })
-      )
-      .messages({
-        "array.base": "يجب أن تكون الملفات مصفوفة من الكائنات",
-      }),
     duration: joi.string().required().min(1).messages({
       "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
@@ -149,7 +108,6 @@ const validateUpdateSession = (
     number: joi.number(),
     courseId: joi.string().messages({
       "string.empty": "الكورس مطلوب",
-      "any.required": "الكورس مطلوب",
     }),
     video: joi.string().messages({
       "string.empty": "رابط الفيديو مطلوب",
@@ -161,50 +119,8 @@ const validateUpdateSession = (
     note: joi.string().max(500).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 500 حرف",
     }),
-    files: joi
-      .array()
-      .items(
-        joi.object({
-          url: joi.string().uri().required().messages({
-            "string.empty": "رابط الملف مطلوب",
-            "string.uri": "يجب أن يكون رابط الملف صالحاً",
-            "any.required": "رابط الملف مطلوب",
-          }),
-          name: joi.string().required().messages({
-            "string.empty": "اسم الملف مطلوب",
-            "any.required": "اسم الملف مطلوب",
-          }),
-          type: joi
-            .string()
-            .valid(
-              "pdf",
-              "doc",
-              "docx",
-              "xls",
-              "xlsx",
-              "ppt",
-              "pptx",
-              "jpg",
-              "jpeg",
-              "png",
-              "mp4",
-              "avi",
-              "mov"
-            )
-            .required()
-            .messages({
-              "string.empty": "نوع الملف مطلوب",
-              "any.only": "نوع الملف غير مدعوم",
-              "any.required": "نوع الملف مطلوب",
-            }),
-        })
-      )
-      .messages({
-        "array.base": "يجب أن تكون الملفات مصفوفة من الكائنات",
-      }),
     duration: joi.string().min(1).messages({
       "string.empty": "مدة الفيديو مطلوبة",
-      "any.required": "مدة الفيديو مطلوبة",
     }),
     available: joi.boolean().messages({
       "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",

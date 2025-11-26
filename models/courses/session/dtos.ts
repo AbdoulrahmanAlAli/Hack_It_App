@@ -8,11 +8,7 @@ export interface ISession extends Document {
   likes: Types.ObjectId[]; // likes from students
   disLikes: Types.ObjectId[]; // disLikes from students
   note: string;
-  files: {
-    url: string;
-    name: string;
-    type: string;
-  }[];
+  files: Types.ObjectId[];
   duration: string;
   available: boolean;
 }

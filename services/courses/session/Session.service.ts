@@ -59,7 +59,14 @@ class CtrlSessionService {
 
   // ~ GET /api/sessions/:id - Get session by ID
   static async getSessionById(id: string) {
-    const session = await Session.findById(id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new BadRequestError("معرف الجلسة غير صالح");
+    }
+
+    const session = await Session.findById(id).populate(
+      "files",
+      "url name type description"
+    );
 
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
@@ -85,14 +92,36 @@ class CtrlSessionService {
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course
   static async getSessionsByCourseId(courseId: string) {
-    const sessons = await Session.find({ courseId });
+    const sessions = await Session.find({ courseId });
 
     const courseHave = await Course.findById(courseId).sort({ createdAt: -1 });
     if (!courseHave) {
       throw new NotFoundError("الكورس غير موجود");
     }
 
-    return sessons;
+    const sessionsWithSignedUrls = await Promise.all(
+      sessions.map(async (session) => {
+        const sessionObject = session.toObject();
+
+        if (sessionObject.video) {
+          const { video, ...sessionData } = sessionObject;
+
+          try {
+            const signedUrl = await generateSignedUrl(video, 3600);
+            (sessionData as any).signedVideoUrl = signedUrl;
+          } catch (error) {
+            console.error("Error generating signed URL:", error);
+            (sessionData as any).signedVideoUrl = video;
+          }
+
+          return sessionData;
+        }
+
+        return sessionObject;
+      })
+    );
+
+    return sessionsWithSignedUrls;
   }
 
   // ~ PUT /api/sessions/:id - Update sessions
@@ -100,12 +129,16 @@ class CtrlSessionService {
     const { error } = validateUpdateSession(sessionData);
     if (error) throw new BadRequestError(error.details[0].message);
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new BadRequestError("معرف الجلسة غير صالح");
+    }
+
     const sessionHave = await Session.findById(id);
     if (!sessionHave) {
       throw new NotFoundError("الحلسة غير موجوة");
     }
 
-    const examWithSameNumber = await Exam.findOne({
+    const examWithSameNumber = await Exam.find({
       courseId: sessionData.courseId,
       number: sessionData.number,
     });
@@ -113,7 +146,7 @@ class CtrlSessionService {
       throw new BadRequestError("الرقم موجود بالفعل");
     }
 
-    const sessionWithSameNumber = await Session.findOne({
+    const sessionWithSameNumber = await Session.find({
       courseId: sessionData.courseId,
       number: sessionData.number,
     });

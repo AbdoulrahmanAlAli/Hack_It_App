@@ -9,10 +9,14 @@ const VersionSchema = new Schema<IVersion>(
     version: {
       type: String,
       required: [true, "رقم الإصدار مطلوب"],
-    }
+    },
+    url: {
+      type: String,
+      required: [true, "رابط التحميل مطلوب"],
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
@@ -27,26 +31,31 @@ const validateCreateVersion = (obj: IVersion): joi.ValidationResult => {
   const schema = joi.object({
     version: joi.string().required().messages({
       "string.empty": "رقم الإصدار مطلوب",
-      "any.required": "رقم الإصدار مطلوب"
-    })
+      "any.required": "رقم الإصدار مطلوب",
+    }),
+    url: joi.string().required().messages({
+      "string.empty": "رابط التحميل مطلوب",
+      "any.required": "رابط التحميل مطلوب",
+    }),
   });
 
   return schema.validate(obj);
 };
 
 // Validation: Update Version
-const validateUpdateVersion = (obj: Partial<IVersion>): joi.ValidationResult => {
+const validateUpdateVersion = (
+  obj: Partial<IVersion>
+): joi.ValidationResult => {
   const schema = joi.object({
     version: joi.string().messages({
-      "string.empty": "رقم الإصدار مطلوب"
-    })
+      "string.empty": "رقم الإصدار مطلوب",
+    }),
+     url: joi.string().messages({
+      "string.empty": "رابط التحميل مطلوب",
+    }),
   });
 
   return schema.validate(obj);
 };
 
-export {
-  Version,
-  validateCreateVersion,
-  validateUpdateVersion
-};
+export { Version, validateCreateVersion, validateUpdateVersion };

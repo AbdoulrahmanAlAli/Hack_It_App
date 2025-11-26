@@ -26,6 +26,7 @@ import routeCtrlAdmin from "./routes/users/admin/Admin.route";
 // route import course
 import routeCourse from "./routes/course/Course.route";
 import routeSession from "./routes/course/session/Session.route";
+import routeFile from "./routes/course/session/file/File.route";
 import routeComment from "./routes/course/comment/Comment.route";
 import routeExam from "./routes/course/exam/Exam.route";
 import routeGroup from "./routes/course/exam/group/Group.route";
@@ -117,6 +118,7 @@ app.use("/api/hackit/ctrl/admin", routeCtrlAdmin);
 // Routes Course
 app.use("/api/hackit/ctrl/course", routeCourse);
 app.use("/api/hackit/ctrl/session", routeSession);
+app.use("/api/hackit/ctrl/file", routeFile);
 app.use("/api/hackit/ctrl/comment", routeComment);
 app.use("/api/hackit/ctrl/exam", routeExam);
 app.use("/api/hackit/ctrl/groupExam", routeGroup);

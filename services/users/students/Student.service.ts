@@ -296,6 +296,7 @@ class CtrlStudentService {
         $set: {
           userName: studentData.userName,
           phoneNumber: studentData.phoneNumber,
+          academicYear: studentData.academicYear,
         },
       },
       { new: true, runValidators: true }
@@ -313,9 +314,8 @@ class CtrlStudentService {
     studentData: IStudent,
     id: string
   ) {
+    console.log("here");
 
-    console.log('here')
-    
     const { error } = validateUpdateSuspendedStudent(studentData);
     if (error) {
       throw new BadRequestError(error.details[0].message);

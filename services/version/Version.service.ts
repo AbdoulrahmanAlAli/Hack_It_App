@@ -98,7 +98,7 @@ class VersionService {
   // Update version
   static async updateVersion(
     versionId: string,
-    versionData: Partial<IVersion>
+    versionData: IVersion
   ) {
     const { error } = validateUpdateVersion(versionData);
     if (error) {
@@ -107,18 +107,6 @@ class VersionService {
 
     if (!mongoose.Types.ObjectId.isValid(versionId)) {
       throw new BadRequestError("معرف الإصدار غير صالح");
-    }
-
-    // Check if version number already exists (if updating version)
-    if (versionData.version) {
-      const existingVersion = await Version.findOne({
-        version: versionData.version,
-        _id: { $ne: versionId },
-      });
-
-      if (existingVersion) {
-        throw new BadRequestError("رقم الإصدار موجود مسبقاً");
-      }
     }
 
     const version = await Version.findByIdAndUpdate(versionId, versionData, {

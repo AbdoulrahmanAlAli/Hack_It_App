@@ -19,7 +19,7 @@ class VersionController {
     const newVersion = await VersionService.createVersion(req.body);
 
     res.status(201).json({
-      message: "تم إنشاء الإصدار بنجاح"
+      message: "تم إنشاء الإصدار بنجاح",
     });
   });
 
@@ -45,14 +45,9 @@ class VersionController {
   // تحديث إصدار
   updateVersion = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { version } = req.body;
+    const version = req.body;
 
-    const { error } = validateUpdateVersion({ version } as any);
-    if (error) {
-      throw new BadRequestError(error.details[0].message);
-    }
-
-    const updatedVersion = await VersionService.updateVersion(id, version);
+    await VersionService.updateVersion(id, version);
 
     res.status(200).json({
       message: "تم تحديث الإصدار بنجاح",

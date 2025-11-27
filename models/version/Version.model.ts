@@ -44,7 +44,7 @@ const validateCreateVersion = (obj: IVersion): joi.ValidationResult => {
 
 // Validation: Update Version
 const validateUpdateVersion = (
-  obj: Partial<IVersion>
+  obj: IVersion
 ): joi.ValidationResult => {
   const schema = joi.object({
     version: joi.string().messages({

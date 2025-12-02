@@ -11,6 +11,8 @@ import { BadRequestError, NotFoundError } from "../../middlewares/handleErrors";
 import { Enrollment } from "../../models/payment/enrollment/Enrollment.model";
 import { IAdmin } from "../../models/users/admins/dtos";
 import { Admin } from "../../models/users/admins/Admin.model";
+import { sendEmail } from "../../utils/mailer";
+import { paymentHtml } from "../../utils/mailHtml";
 
 // Define proper types for the service methods
 interface GeneratePaymentData {
@@ -87,6 +89,22 @@ class PaymentService {
     // Set expiration to 24 hours from now
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 24);
+
+    try {
+      await sendEmail({
+        to: student.email,
+        subject: `كود دفع كورس ${course.name}`,
+        html: paymentHtml(
+          rawCode,
+          course.name,
+          student.userName,
+          student.universityNumber
+        ),
+      });
+    } catch (emailError) {
+      console.error("Failed to send email:", emailError);
+      throw new Error("فشل في إرسال بريد التحقق، يرجى المحاولة مرة أخرى");
+    }
 
     // Create payment code
     const paymentCode = await PaymentCode.create({

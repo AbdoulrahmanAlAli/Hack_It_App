@@ -9,9 +9,7 @@ import {
     validateLoginTeacher,
   } from "../../../models/users/teachers/Teacher.model";
   import { generateJWT } from "../../../utils/generateToken";
-  import { sendEmail } from "../../../utils/mailer";
   import bcrypt from "bcrypt";
-import { welcomeTeacherHtml } from "../../../utils/mailHtml";
   
   class AuthTeacherService {
     // ~ Post => /api/univers/ctrl/teacher/register ~ Create New Teacher

@@ -1,336 +1,641 @@
 export const html = (otp: string) => `<!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رمز التحقق - هكرها</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f5f7fa;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        h1 {
-            color: #2d3748;
-            margin-top: 0;
-            font-size: 24px;
-        }
-        
-        .otp-box {
-            background-color: #f8f9fa;
-            border: 1px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 25px 0;
-        }
-        
-        .otp {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: #6e48aa;
-        }
-        
-        .note {
-            background-color: #f0f4f8;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #4a5568;
-            border-right: 4px solid #6e48aa;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #718096;
-            font-size: 12px;
-        }
-        
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            margin: 15px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1 class="logo">هكرها</h1>
-        </div>
-        
-        <div class="content">
-            <h1>مرحباً بك في هكرها!</h1>
-            <p>شكراً لتسجيلك في منصتنا. يرجى استخدام رمز التحقق التالي لإكمال عملية التسجيل:</p>
-            
-            <div class="otp-box">
-                <p style="margin-top: 0;">رمز التحقق الخاص بك هو:</p>
-                <div class="otp">${otp}</div>
-                <p style="margin-bottom: 0;">صالح لمدة 10 دقائق</p>
-            </div>
-            
-            <p class="note">
-                <strong>ملاحظة:</strong> لا تشارك هذا الرمز مع أي شخص. فريق هكرها لن يطلب منك أبداً مشاركة رمز التحقق الخاص بك.
-            </p>
-            
-            <p>إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة أو <a href="mailto:support@hackit.com">الاتصال بنا</a>.</p>
-        </div>
-        
-        <div class="footer">
-            <p>© ${new Date().getFullYear()} هكرها. جميع الحقوق محفوظة.</p>
-            <p>هذه رسالة تلقائية، يرجى عدم الرد عليها.</p>
-        </div>
-    </div>
-</body>
-</html>`;
+  <meta charset="UTF-8">
+  <title>رمز التحقق - هكرها</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f8;
+      direction: rtl;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+      margin: 20px auto;
+    }
+    
+    .header {
+      background-color: #073b74;
+      padding: 0px 10px;
+      text-align: center;
+    }
+    
+    .logo-container {
+      width: 290px;
+      height: 290px;
+      margin: 0 auto;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    
+    .content {
+      padding: 32px;
+    }
+    
+    /* Media Queries معدلة */
+    @media only screen and (max-width: 650px) {
+      .container {
+        width: 95% !important;
+        margin: 10px auto !important;
+        border-radius: 16px !important;
+      }
+      
+      .header {
+        padding: 0px 15px !important;
+      }
+      
+      .logo-container {
+        width: 220px !important;
+        height: 220px !important;
+        padding: 8px !important;
+      }
+      
+      .content {
+        padding: 24px 20px !important;
+      }
+      
+      .code-number {
+        font-size: 28px !important;
+        letter-spacing: 5px !important;
+        min-width: 200px !important;
+        padding: 14px 20px !important;
+      }
+      
+      .title {
+        font-size: 20px !important;
+      }
+      
+      .description {
+        font-size: 14px !important;
+        margin-bottom: 25px !important;
+      }
+      
+      .verification-box {
+        padding: 20px !important;
+        margin: 20px 0 !important;
+      }
+      
+      .verification-label {
+        font-size: 15px !important;
+        margin-bottom: 18px !important;
+      }
+    }
+    
+    @media only screen and (max-width: 480px) {
+      .header {
+        padding: 0px 12px !important;
+      }
+      
+      .logo-container {
+        width: 200px !important;
+        height: 200px !important;
+        padding: 6px !important;
+      }
+      
+      .content {
+        padding: 20px 16px !important;
+      }
+      
+      .title {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+      }
+      
+      .description {
+        font-size: 13.5px !important;
+        line-height: 1.7 !important;
+        margin-bottom: 20px !important;
+      }
+      
+      .code-number {
+        font-size: 24px !important;
+        letter-spacing: 4px !important;
+        min-width: 180px !important;
+        padding: 12px 18px !important;
+      }
+      
+      .verification-box {
+        padding: 18px !important;
+        margin: 18px 0 !important;
+      }
+      
+      .verification-label {
+        font-size: 14px !important;
+        margin-bottom: 16px !important;
+      }
+      
+      .time-info {
+        font-size: 13px !important;
+        margin-top: 20px !important;
+      }
+      
+      .warning-box {
+        margin-top: 20px !important;
+        padding: 14px !important;
+      }
+      
+      .warning-text {
+        font-size: 12.5px !important;
+        line-height: 1.6 !important;
+      }
+      
+      .footer {
+        padding: 15px 16px !important;
+        font-size: 11px !important;
+      }
+    }
+    
+    @media only screen and (max-width: 360px) {
+      .logo-container {
+        width: 100px !important;
+        height: 100px !important;
+      }
+      
+      .code-number {
+        font-size: 22px !important;
+        letter-spacing: 3px !important;
+        min-width: 160px !important;
+        padding: 10px 16px !important;
+      }
+      
+      .verification-code {
+        min-width: 180px !important;
+        padding: 12px 16px !important;
+      }
+      
+      .content {
+        padding: 18px 14px !important;
+      }
+    }
+    
+    /* تحسين مظهر رمز التحقق */
+    .verification-code {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 10px auto;
+      text-align: center;
+      min-width: 220px;
+    }
 
-export const welcomeTeacherHtml = (email: string, password: string) => `<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مرحباً بك - Universe_o7</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f5f7fa;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2c7744 0%, #5a9367 100%);
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        h1 {
-            color: #2d3748;
-            margin-top: 0;
-            font-size: 24px;
-            text-align: center;
-        }
-        
-        .welcome-icon {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 48px;
-            color: #2c7744;
-        }
-        
-        .login-info {
-            background-color: #f8f9fa;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 25px 0;
-            text-align: center;
-        }
-        
-        .credentials {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        
-        .credential-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-            padding: 8px;
-            background-color: #f9fafb;
-            border-radius: 4px;
-        }
-        
-        .credential-label {
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .credential-value {
-            font-family: 'Courier New', monospace;
-            background-color: #1f2937;
-            color: #10b981;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .security-note {
-            background-color: #fef3c7;
-            border: 1px solid #f59e0b;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 14px;
-            color: #92400e;
-        }
-        
-        .warning-icon {
-            color: #f59e0b;
-            margin-left: 5px;
-        }
-        
-        .features {
-            margin: 25px 0;
-        }
-        
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-        }
-        
-        .feature-icon {
-            font-size: 20px;
-            margin-left: 15px;
-            color: #2c7744;
-            min-width: 30px;
-            text-align: center;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #718096;
-            font-size: 12px;
-        }
-        
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #2c7744 0%, #5a9367 100%);
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            margin: 20px 0;
-        }
-        
-        .center {
-            text-align: center;
-        }
-    </style>
+    .code-number {
+      color: #073b74;
+      font-size: 32px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 6px;
+      background-color: #f0f7ff;
+      border: 2px solid #073b74;
+      padding: 16px 24px;
+      border-radius: 10px;
+      display: block;
+      margin: 0;
+    }
+    
+    .copy-success {
+      color: #2ecc71;
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      height: 0;
+      overflow: hidden;
+      font-weight: bold;
+    }
+    
+    .copy-success.show {
+      opacity: 1;
+      height: auto;
+      margin-top: 12px;
+    }
+    
+    /* تلميح عند التحويم على الرمز */
+    .verification-code::after {
+      content: "انقر لنسخ الرمز";
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,0.85);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .verification-code:hover::after {
+      opacity: 1;
+    }
+    
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333333;
+      margin-bottom: 16px;
+    }
+    
+    .description {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #555c67;
+      margin-bottom: 30px;
+    }
+    
+    .verification-box {
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 25px 0;
+      background-color: #f9fafc;
+    }
+    
+    .verification-label {
+      font-size: 16px;
+      color: #222b35;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .time-info {
+      font-size: 14px;
+      color: #7b8491;
+      text-align: center;
+      margin-top: 24px;
+      line-height: 1.6;
+    }
+    
+    .warning-box {
+      margin-top: 24px;
+      background-color: #f3f4f8;
+      border-top: 3px solid #073b74;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    
+    .warning-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .warning-icon {
+      font-size: 20px;
+      color: #073b74;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .warning-text {
+      font-size: 13px;
+      color: #444c58;
+      text-align: right;
+      line-height: 1.7;
+    }
+    
+    .alert {
+      color: #073b74;
+      font-weight: bold;
+    }
+    
+    .footer {
+      background-color: #f7f7fb;
+      padding: 18px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #818896;
+      line-height: 1.7;
+    }
+    
+    .link {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="logo">هكرها</h1>
-        </div>
-        
-        <div class="content">
-            <h1>مرحباً بك في عائلة هكرها</h1>
-            
-            <div class="welcome-icon">
-                🎓
-            </div>
-            
-            <p>عزيزي المعلم،</p>
-            <p>نحن سعداء جداً بانضمامك إلينا كمعلم في منصتنا. خبرتك ومعرفتك ستكون إضافة قيمة لمجتمعنا التعليمي.</p>
-            
-            <div class="login-info">
-                <h3 style="color: #2c7744; margin-top: 0;">معلومات الدخول إلى حسابك:</h3>
-                
-                <div class="credentials">
-                    <div class="credential-item">
-                        <span class="credential-label">البريد الإلكتروني:</span>
-                        <span class="credential-value">${email}</span>
-                    </div>
-                    
-                    <div class="credential-item">
-                        <span class="credential-label">كلمة السر:</span>
-                        <span class="credential-value">${password}</span>
-                    </div>
-                </div>
-                
-                <div class="security-note">
-                    <span class="warning-icon">⚠️</span>
-                    <strong>هام:</strong> يرجى حفظ هذه المعلومات في مكان آمن وتغيير كلمة السر بعد أول دخول إلى حسابك.
-                </div>
-            </div>
-            
-            <p>نحن هنا لدعمك في رحلتك التعليمية. إذا كان لديك أي استفسارات أو تحتاج إلى مساعدة، فلا تتردد في التواصل مع فريق الدعم الخاص بنا.</p>
-            
-            <p style="text-align: center; color: #718096; font-size: 14px;">
-                مع فائق التقدير،<br>
-                <strong>فريق هكرها</strong>
-            </p>
-        </div>
-        
-        <div class="footer">
-            <p>© ${new Date().getFullYear()} هكرها. جميع الحقوق محفوظة.</p>
-            <p>هذه رسالة تلقائية، يرجى عدم الرد عليها.</p>
-            <p>للتواصل: <a href="mailto:teachers@hackerha.com" style="color: #2c7744;">teachers@hackerha.com</a></p>
-        </div>
+  <!-- الحاوية الرئيسية -->
+  <div class="container">
+    
+    <!-- الهيدر مع صورة اللوجو -->
+    <div class="header">
+      <div class="logo-container">
+        <img src="https://i.postimg.cc/MZ7d9pD5/Frame-1261154840.png"
+             alt="Hackerha Logo"
+             class="logo-img">
+      </div>
     </div>
+
+    <!-- المحتوى -->
+    <div class="content">
+      <!-- العنوان -->
+      <h1 class="title">
+        مرحباً بك في تطبيق هكرها 👋
+      </h1>
+
+      <!-- فقرة الترحيب -->
+      <p class="description">
+        شكراً لمحاولتك تسجيل الدخول إلى حسابك، يرجى استخدام رمز التحقق التالي لإتمام
+        عملية تسجيل الدخول.
+      </p>
+
+      <!-- صندوق الرمز -->
+      <div class="verification-box">
+        <span class="verification-label">رمز التحقق الخاص بك</span>
+        
+        <!-- رمز التحقق فقط - يمكن نسخه بالنقر -->
+        <div id="verificationCode" 
+             class="verification-code">
+          <span class="code-number">${otp}</span>
+        </div>
+        
+        <!-- رسالة نجاح النسخ -->
+        <div id="copySuccessMessage" class="copy-success">
+          ✓ تم نسخ الرمز بنجاح إلى الحافظة
+        </div>
+        
+        <!-- معلومات الصلاحية -->
+        <div class="time-info">
+          <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span style="font-size: 18px;">⏱️</span>
+            <span>هذا الرمز صالح لمدة <strong style="color:#073b74;">10 دقائق</strong> فقط</span>
+          </div>
+          <div style="font-size: 13px; color: #9aa1ab; margin-top: 4px;">
+            (انقر على الرمز أعلاه لنسخه)
+          </div>
+        </div>
+      </div>
+
+      <!-- فقرة التنبيه الأمني -->
+      <p style="font-size: 14px; line-height: 1.8; color: #555c67; text-align: right; margin-top: 24px;">
+        إن لم تكن أنت من طلب تسجيل الدخول، ننصحك بتسجيل الدخول فوراً والتحقق من أمان حسابك،
+        أو
+        <a href="https://example.com/support" class="link">
+          التواصل مع الدعم
+        </a>.
+      </p>
+
+      <!-- مربع الملاحظة -->
+      <div class="warning-box">
+        <div class="warning-content">
+          <div class="warning-icon">⚠️</div>
+          <div class="warning-text">
+            <span class="alert">تنبيه:</span>
+            لا تشارك هذا الرمز مع أي شخص، فريق هكرها لن يطلب منك أبداً مشاركة رمز التحقق.
+            يمكنك نسخ الرمز بالنقر عليه أعلاه.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الفوتر -->
+    <div class="footer">
+      فريق <strong style="color:#073b74;">هكرها</strong> – كلية الهندسة المعلوماتية، جامعة حلب<br>
+      جميع الحقوق محفوظة © 2025<br>
+      هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+export const paymentHtml = (
+  code: string,
+  courseName: string,
+  studentName: string,
+  universityNumber: string | number,
+) => `<!DOCTYPE html> 
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>كود دفع الكورس - هكرها</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f8;
+      direction: rtl;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+      margin: 20px auto;
+    }
+    
+    .header {
+      background-color: #073b74;
+      padding: 0px 10px;
+      text-align: center;
+    }
+    
+    .logo-container {
+      width: 290px;
+      height: 290px;
+      margin: 0 auto;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    
+    .content {
+      padding: 32px;
+    }
+
+    /* صندوق معلومات الطالب */
+    .student-box {
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+      background-color: #f9fafc;
+    }
+
+    .student-line {
+      font-size: 15px;
+      color: #444c58;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    /* صندوق الكود */
+    .verification-box {
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 25px 0;
+      background-color: #f9fafc;
+    }
+
+    .verification-label {
+      font-size: 16px;
+      color: #222b35;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .verification-code {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 10px auto;
+      text-align: center;
+      min-width: 220px;
+    }
+
+    .code-number {
+      color: #073b74;
+      font-size: 32px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 6px;
+      background-color: #f0f7ff;
+      border: 2px solid #073b74;
+      padding: 16px 24px;
+      border-radius: 10px;
+      display: block;
+      margin: 0;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333333;
+      margin-bottom: 16px;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #555c67;
+      margin-bottom: 24px;
+    }
+
+    .footer {
+      background-color: #f7f7fb;
+      padding: 18px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #818896;
+      line-height: 1.7;
+    }
+
+    .link {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div class="header">
+      <div class="logo-container">
+        <img src="https://i.postimg.cc/MZ7d9pD5/Frame-1261154840.png"
+             alt="Hackerha Logo"
+             class="logo-img">
+      </div>
+    </div>
+
+    <div class="content">
+      
+      <h1 class="title">كود دفع كورس ${courseName}</h1>
+
+      <p class="description">
+        تم إنشاء كود الدفع الخاص بك لإتمام الاشتراك في هذا الكورس.
+      </p>
+
+      <!-- صندوق معلومات الطالب -->
+      <div class="student-box">
+        <div class="student-line">اسم الطالب: ${studentName}</div>
+        <div class="student-line">الرقم الجامعي: ${universityNumber}</div>
+      </div>
+
+      <!-- صندوق الكود -->
+      <div class="verification-box">
+        <span class="verification-label">كود الدفع</span>
+        
+        <div class="verification-code">
+          <span class="code-number">${code}</span>
+        </div>
+      </div>
+
+      <p style="font-size: 14px; line-height: 1.8; color: #555c67; text-align: right; margin-top: 24px;">
+        بعد الدفع سيتم تفعيل اشتراكك في الكورس.  
+        في حال وجود أي مشكلة يمكنك <a href="https://example.com/support" class="link">التواصل مع الدعم</a>.
+      </p>
+
+    </div>
+
+    <div class="footer">
+      فريق <strong style="color:#073b74;">هكرها</strong> – كلية الهندسة المعلوماتية، جامعة حلب<br>
+      جميع الحقوق محفوظة © 2025<br>
+      هذه رسالة آلية، الرجاء عدم الرد.
+    </div>
+
+  </div>
 </body>
 </html>`;

@@ -598,20 +598,6 @@ class CtrlStudentService {
 
     const existenceResults: any = {};
 
-    if (phoneNumber) {
-      // Validate phone number format
-      if (!/^09[0-9]{8}$/.test(phoneNumber)) {
-        throw new BadRequestError(
-          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام."
-        );
-      }
-      const phoneExists = await Student.findOne({
-        phoneNumber,
-        available: true,
-      });
-      existenceResults.phoneNumberExists = !!phoneExists;
-    }
-
     if (email) {
       // Basic email validation
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

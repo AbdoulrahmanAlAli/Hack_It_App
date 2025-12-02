@@ -14,7 +14,7 @@ import {
 } from "../../../models/users/students/Student.model";
 import { OTPUtils } from "../../../utils/generateOtp";
 import { sendEmail } from "../../../utils/mailer";
-import { html } from "../../../utils/mailHtml";
+import { html, resetPasswordHtml } from "../../../utils/mailHtml";
 import bcrypt from "bcrypt";
 import { ICloudinaryFile } from "../../../utils/types";
 import { Course } from "../../../models/courses/Course.model";
@@ -164,14 +164,15 @@ class CtrlStudentService {
     try {
       await sendEmail({
         to: existingInactiveByEmail.email,
-        subject: "رمز اعادة تعيين كلمة السر - حساب طالب",
-        text: `رمز التحقق الخاص بك هو: ${otp}`,
-        html: html(otp),
+        subject: "رمز إعادة تعيين كلمة المرور - حساب طالب",
+        text: `رمز التحقق الخاص بك لإعادة تعيين كلمة المرور هو: ${otp}`,
+        html: resetPasswordHtml(otp), // استخدام التصميم الجديد
       });
     } catch (emailError) {
-      await Student.findByIdAndDelete(existingInactiveByEmail._id);
-      console.error("Failed to send email:", emailError);
-      throw new Error("فشل في إرسال بريد التحقق، يرجى المحاولة مرة أخرى");
+      console.error("Failed to send reset password email:", emailError);
+      throw new Error(
+        "فشل في إرسال بريد إعادة تعيين كلمة المرور، يرجى المحاولة مرة أخرى"
+      );
     }
 
     return {

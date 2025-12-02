@@ -29,9 +29,6 @@ class AuthAdminService {
       loginData.password,
       admin.password
     );
-    console.log(isPasswordValid);
-    console.log({ loginData: loginData.password });
-    console.log({ admin: admin.password });
 
     if (!isPasswordValid) {
       throw new UnauthorizedError("البريد الإلكتروني أو كلمة المرور غير صحيحة");

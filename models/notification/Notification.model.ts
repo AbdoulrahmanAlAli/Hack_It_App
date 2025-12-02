@@ -5,6 +5,11 @@ import { INotification } from "./dtos";
 // Notification Schema
 const NotificationSchema = new Schema<INotification>(
   {
+    studentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Student",
+      default: null,
+    },
     type: {
       type: String,
       enum: ["alert", "new", "success", "discount", "connection"],
@@ -22,15 +27,20 @@ const NotificationSchema = new Schema<INotification>(
       trim: true,
       maxlength: [500, "النص الفرعي يجب ألا يتجاوز 500 حرف"],
     },
-    time: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
   }
 );
+
+// Virtual for student details
+NotificationSchema.virtual("student", {
+  ref: "Student",
+  localField: "studentId",
+  foreignField: "_id",
+  justOne: true,
+  options: { select: "userName profilePhoto" },
+});
 
 // Indexes
 NotificationSchema.index({ createdAt: -1 });
@@ -41,13 +51,22 @@ const Notification: Model<INotification> = mongoose.model<INotification>(
   NotificationSchema
 );
 
-// Validation Schema
-const validateCreateNotification = (obj: Partial<INotification>): joi.ValidationResult => {
+// Validation Schema: Create Notification
+const validateCreateNotification = (
+  obj: Partial<INotification>
+): joi.ValidationResult => {
   const schema = joi.object({
-    type: joi.string().valid("alert", "new", "success", "discount", "connection").required().messages({
-      "any.only": "نوع الإشعار غير صالح",
-      "any.required": "نوع الإشعار مطلوب",
+    studentId: joi.string().allow(null, "").messages({
+      "string.empty": "معرف الطالب غير صالح",
     }),
+    type: joi
+      .string()
+      .valid("alert", "new", "success", "discount", "connection")
+      .required()
+      .messages({
+        "any.only": "نوع الإشعار غير صالح",
+        "any.required": "نوع الإشعار مطلوب",
+      }),
     title: joi.string().max(200).required().messages({
       "string.empty": "عنوان الإشعار مطلوب",
       "string.max": "العنوان يجب ألا يتجاوز 200 حرف",
@@ -58,13 +77,36 @@ const validateCreateNotification = (obj: Partial<INotification>): joi.Validation
       "string.max": "النص الفرعي يجب ألا يتجاوز 500 حرف",
       "any.required": "النص الفرعي للإشعار مطلوب",
     }),
-    time: joi.date().default(Date.now),
   });
 
   return schema.validate(obj);
 };
 
-export {
-  Notification,
-  validateCreateNotification,
+// Validation Schema: Update Notification
+const validateUpdateNotification = (
+  obj: Partial<INotification>
+): joi.ValidationResult => {
+  const schema = joi.object({
+    studentId: joi.string().allow(null, "").messages({
+      "string.empty": "معرف الطالب غير صالح",
+    }),
+    type: joi
+      .string()
+      .valid("alert", "new", "success", "discount", "connection")
+      .messages({
+        "any.only": "نوع الإشعار غير صالح",
+      }),
+    title: joi.string().max(200).messages({
+      "string.empty": "عنوان الإشعار مطلوب",
+      "string.max": "العنوان يجب ألا يتجاوز 200 حرف",
+    }),
+    subtitle: joi.string().max(500).messages({
+      "string.empty": "النص الفرعي للإشعار مطلوب",
+      "string.max": "النص الفرعي يجب ألا يتجاوز 500 حرف",
+    }),
+  });
+
+  return schema.validate(obj);
 };
+
+export { Notification, validateCreateNotification, validateUpdateNotification };

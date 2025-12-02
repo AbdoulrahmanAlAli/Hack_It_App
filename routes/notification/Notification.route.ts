@@ -5,53 +5,40 @@ import checkRole from "../../middlewares/checkRole";
 
 const router: Router = Router();
 
-// مسارات عامة (متاحة لجميع الطلاب)
-router.route("/public").get(notificationController.getPublicNotifications); // أي شخص يمكنه رؤية الإشعارات العامة
-
+// إنشاء إشعار (للمشرف فقط)
 router
-  .route("/public/type/:type")
-  .get(notificationController.getPublicNotificationsByType);
-
-// مسارات الطالب لإدارة FCM
-router
-  .route("/fcm-token/:id")
-  .put(verifyToken, checkRole(["admin"]), notificationController.updateFcmToken)
-  .delete(
-    verifyToken,
-    checkRole(["admin"]),
-    notificationController.removeFcmToken
-  );
-
-router
-  .route("/settings/:id")
-  .put(
-    verifyToken,
-    checkRole(["admin"]),
-    notificationController.updateNotificationSettings
-  );
-
-// مسارات الأدمن لإدارة الإشعارات العامة
-router
-  .route("/public")
+  .route("/")
   .post(
     verifyToken,
     checkRole(["admin"]),
-    notificationController.createPublicNotification
+    notificationController.createNotification
   );
 
+// الحصول على إشعارات الطالب (الشخصية + العامة)
 router
-  .route("/public/test")
-  .post(
-    verifyToken,
-    checkRole(["admin"]),
-    notificationController.sendPublicTestNotification
-  );
+  .route("/student/:studentId")
+  .get(verifyToken, notificationController.getNotificationsByStudentId);
+
+// الحصول على إشعار محدد
+router
+  .route("/:id")
+  .get(verifyToken, notificationController.getNotificationById);
+
+// تحديث إشعار
+router
+  .route("/:id")
+  .put(verifyToken, notificationController.updateNotification);
+
+// حذف إشعار
+router
+  .route("/:id")
+  .delete(verifyToken, notificationController.deleteNotification);
 
 router
-  .route("/stats")
+  .route("/")
   .get(
     verifyToken,
-    notificationController.getNotificationStats
+    checkRole(["admin"]),
+    notificationController.getAllNotifications
   );
-
 export default router;

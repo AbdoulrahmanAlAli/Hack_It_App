@@ -30,28 +30,27 @@ const streamToString = (stream: Readable): Promise<string> =>
  * يرجّع AES key بعد ما يتأكد أن الطالب مسجّل في الكورس
  */
 router.get("/key/:courseId/:sessionId", async (req: Request, res: Response) => {
-  const user = (req as AuthenticatedRequest).user;
+  // const user = (req as AuthenticatedRequest).user;
   const { courseId, sessionId } = req.params;
 
-  console.log(user);
 
-  if (!user || user.role !== "student") {
-    throw new BadRequestError("غير مصرح");
-  }
+  // if (!user || user.role !== "student") {
+  //   throw new BadRequestError("غير مصرح");
+  // }
 
-  // تحقق أن الطالب موجود
-  const student = await Student.findById(user.id).select("enrolledCourses");
-  if (!student) {
-    throw new NotFoundError("الطالب غير موجود");
-  }
+  // // تحقق أن الطالب موجود
+  // const student = await Student.findById(user.id).select("enrolledCourses");
+  // if (!student) {
+  //   throw new NotFoundError("الطالب غير موجود");
+  // }
 
-  // تحقق أنه مسجل في الكورس
-  const isEnrolled = student.enrolledCourses.some(
-    (id) => id.toString() === courseId
-  );
-  if (!isEnrolled) {
-    throw new BadRequestError("غير مسجل في هذا الكورس");
-  }
+  // // تحقق أنه مسجل في الكورس
+  // const isEnrolled = student.enrolledCourses.some(
+  //   (id) => id.toString() === courseId
+  // );
+  // if (!isEnrolled) {
+  //   throw new BadRequestError("غير مسجل في هذا الكورس");
+  // }
 
   // تحقق أن الكورس والجلسة موجودين
   const course = await Course.findById(courseId);
@@ -141,22 +140,22 @@ router
 router.get(
   "/segment/:courseId/:sessionId/:segmentName",
   async (req: Request, res: Response) => {
-    const user = (req as AuthenticatedRequest).user;
+    // const user = (req as AuthenticatedRequest).user;
     const { courseId, sessionId, segmentName } = req.params;
 
-    if (!user || user.role !== "student") {
-      throw new BadRequestError("غير مصرح");
-    }
+    // if (!user || user.role !== "student") {
+    //   throw new BadRequestError("غير مصرح");
+    // }
 
-    const student = await Student.findById(user.id).select("enrolledCourses");
-    if (!student) throw new NotFoundError("الطالب غير موجود");
+    // const student = await Student.findById(user.id).select("enrolledCourses");
+    // if (!student) throw new NotFoundError("الطالب غير موجود");
 
-    const isEnrolled = student.enrolledCourses.some(
-      (id) => id.toString() === courseId
-    );
-    if (!isEnrolled) {
-      throw new BadRequestError("غير مسجل في هذا الكورس");
-    }
+    // const isEnrolled = student.enrolledCourses.some(
+    //   (id) => id.toString() === courseId
+    // );
+    // if (!isEnrolled) {
+    //   throw new BadRequestError("غير مسجل في هذا الكورس");
+    // }
 
     const session = await Session.findOne({ _id: sessionId, courseId }).lean();
     if (!session) throw new NotFoundError("الجلسة غير موجودة");

@@ -33,7 +33,6 @@ router.get("/key/:courseId/:sessionId", async (req: Request, res: Response) => {
   // const user = (req as AuthenticatedRequest).user;
   const { courseId, sessionId } = req.params;
 
-
   // if (!user || user.role !== "student") {
   //   throw new BadRequestError("غير مصرح");
   // }
@@ -62,7 +61,7 @@ router.get("/key/:courseId/:sessionId", async (req: Request, res: Response) => {
   // اسم ملف المفتاح في السيرفر، مثلاً: courseId-sessionId.key
   const fileName = `${courseId}-${sessionId}.key`;
   const keyPath = path.join(__dirname, "..", "keys", fileName);
-
+  console.log("KEY PATH = ", keyPath, "exists? ", fs.existsSync(keyPath));
   if (!fs.existsSync(keyPath)) {
     throw new NotFoundError("مفتاح التشفير غير موجود");
   }

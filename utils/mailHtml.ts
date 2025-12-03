@@ -666,7 +666,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .header {
-      background-color: #d93c3c;
+      background-color: #073b74;
       padding: 0px 10px;
       text-align: center;
     }
@@ -844,13 +844,13 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
 
     .code-number {
-      color: #d93c3c;
+      color: #073b74;
       font-size: 32px;
       font-weight: bold;
       font-family: 'Courier New', monospace;
       letter-spacing: 6px;
       background-color: #fef2f2;
-      border: 2px solid #d93c3c;
+      border: 2px solid #073b74;
       padding: 16px 24px;
       border-radius: 10px;
       display: block;
@@ -902,7 +902,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       text-align: center;
       font-size: 22px;
       font-weight: bold;
-      color: #d93c3c;
+      color: #333333;
       margin-bottom: 16px;
     }
     
@@ -924,7 +924,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     
     .verification-label {
       font-size: 16px;
-      color: #d93c3c;
+      color: #222b35;
       text-align: center;
       font-weight: bold;
       margin-bottom: 20px;
@@ -942,7 +942,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     .warning-box {
       margin-top: 24px;
       background-color: #fef2f2;
-      border-top: 3px solid #d93c3c;
+      border-top: 3px solid #073b74;
       border-radius: 10px;
       padding: 16px;
     }
@@ -955,7 +955,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     
     .warning-icon {
       font-size: 20px;
-      color: #d93c3c;
+      color: #073b74;
       flex-shrink: 0;
       margin-top: 2px;
     }
@@ -968,7 +968,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .alert {
-      color: #d93c3c;
+      color: #0066cc;
       font-weight: bold;
     }
     
@@ -982,7 +982,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .link {
-      color: #d93c3c;
+      color: #0066cc;
       text-decoration: none;
     }
     

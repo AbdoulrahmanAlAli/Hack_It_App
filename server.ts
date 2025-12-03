@@ -146,7 +146,7 @@ app.use("/api/hackit/ctrl/version", routeVersion);
 app.use("/api/hackit/ctrl/ads", routeAds);
 
 // Routes Hls
-app.use("/api/hackit/ctrl/hls", hlsRouter);
+app.use("/api/hackit/hls", hlsRouter);
 
 // Error Handler Middleware
 app.use(notFound);

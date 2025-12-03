@@ -70,58 +70,38 @@ class CtrlSessionService {
 
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
-    // تحويل كائن Mongoose إلى كائن JavaScript عادي
     const sessionObject = session.toObject();
 
-    if (sessionObject.video) {
-      // ✅ الحل باستخدام التفكيك: فصل video عن باقي البيانات
-      const { video, ...sessionData } = sessionObject;
+    const courseId = sessionObject.courseId.toString();
+    const sessionId = sessionObject._id;
+    const videoKey = sessionObject.video;
 
-      // إنشاء الرابط الموقّع باستخدام المفتاح المفصول
-      const signedUrl = await generateSignedUrl(video, 3600);
-
-      // إضافة الرابط الجديد إلى البيانات المتبقية
-      (sessionData as any).signedVideoUrl = signedUrl;
-
-      // إرجاع الكائن النظيف (الذي لا يحتوي على 'video')
-      return sessionData;
-    }
-
-    return sessionObject; // إرجاع الكائن بدون تعديل إذا لم يكن هناك فيديو
+    return {
+      ...sessionObject,
+      videoKey, // مفيد لو تحتاجه في لوحة تحكم الأدمن مثلاً
+      playlistEndpoint: `/api/hackit/hls/playlist/${courseId}/${sessionId}`,
+      // ملاحظة: لا نعيد أي رابط مباشر لـ Wasabi هنا 👈
+    };
   }
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course
   static async getSessionsByCourseId(courseId: string) {
-    const sessions = await Session.find({ courseId });
+    const sessions = await Session.find({ courseId }).sort({ number: 1 });
 
-    const courseHave = await Course.findById(courseId).sort({ createdAt: -1 });
+    const courseHave = await Course.findById(courseId);
     if (!courseHave) {
       throw new NotFoundError("الكورس غير موجود");
     }
 
-    const sessionsWithSignedUrls = await Promise.all(
-      sessions.map(async (session) => {
-        const sessionObject = session.toObject();
-
-        if (sessionObject.video) {
-          const { video, ...sessionData } = sessionObject;
-
-          try {
-            const signedUrl = await generateSignedUrl(video, 3600);
-            (sessionData as any).signedVideoUrl = signedUrl;
-          } catch (error) {
-            console.error("Error generating signed URL:", error);
-            (sessionData as any).signedVideoUrl = video;
-          }
-
-          return sessionData;
-        }
-
-        return sessionObject;
-      })
-    );
-
-    return sessionsWithSignedUrls;
+    return sessions.map((session) => {
+      const obj = session.toObject();
+      const sessionId = obj._id;
+      return {
+        ...obj,
+        videoKey: obj.video,
+        playlistEndpoint: `/api/hackit/hls/playlist/${courseId}/${sessionId}`,
+      };
+    });
   }
 
   // ~ PUT /api/sessions/:id - Update sessions

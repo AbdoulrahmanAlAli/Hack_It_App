@@ -62,7 +62,7 @@ class CtrlCourseService {
     }
 
     const course = await Course.findById(id)
-      .populate("teacher", "name specialization profilePhoto")
+      .populate("teacher")
       .populate({
         path: "sessions",
         options: { sort: { createdAt: -1 } },

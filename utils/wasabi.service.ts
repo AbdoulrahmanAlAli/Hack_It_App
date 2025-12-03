@@ -4,11 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const WASABI_REGION = process.env.WASABI_REGION;
-const WASABI_ENDPOINT = process.env.WASABI_ENDPOINT;
-const WASABI_BUCKET_NAME = process.env.WASABI_BUCKET_NAME;
+export const WASABI_REGION = process.env.WASABI_REGION as string;
+export const WASABI_ENDPOINT = process.env.WASABI_ENDPOINT as string;
+export const WASABI_BUCKET_NAME = process.env.WASABI_BUCKET_NAME as string;
 
-const wasabiClient = new S3Client({
+export const wasabiClient = new S3Client({
   region: WASABI_REGION,
   endpoint: WASABI_ENDPOINT,
   credentials: {
@@ -17,6 +17,7 @@ const wasabiClient = new S3Client({
   },
 });
 
+// تقدر تظل تستخدمه في أي مكان آخر (لتحميل ملفات، صور، الخ)
 export async function generateSignedUrl(
   key: string,
   expiresIn: number = 3600
@@ -27,7 +28,7 @@ export async function generateSignedUrl(
   });
 
   const signedUrl = await getSignedUrl(wasabiClient, command, {
-    expiresIn: expiresIn,
+    expiresIn,
   });
 
   return signedUrl;

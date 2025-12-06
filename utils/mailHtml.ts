@@ -2,15 +2,40 @@ export const html = (otp: string) => `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>رمز التحقق - هكرها</title>
   <style>
-    body {
+    :root {
+      --primary-color: #073b74;
+      --secondary-color: #f0f7ff;
+      --text-dark: #222b35;
+      --text-medium: #444c58;
+      --text-light: #555c67;
+      --text-muted: #818896;
+      --border-color: #e1e5eb;
+      --background-light: #f9fafc;
+      --background-page: #f3f4f8;
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background-color: #f3f4f8;
+    }
+    
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--background-page);
       direction: rtl;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
       line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     
     .container {
@@ -24,8 +49,8 @@ export const html = (otp: string) => `<!DOCTYPE html>
     }
     
     .header {
-      background-color: #073b74;
-      padding: 0px 10px;
+      background-color: var(--primary-color);
+      padding: 5px 0 15px;
       text-align: center;
     }
     
@@ -40,269 +65,145 @@ export const html = (otp: string) => `<!DOCTYPE html>
     }
     
     .logo-img {
-      width: 100%;
+        width: 100%;
       height: 100%;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 8px;
     }
     
     .content {
-      padding: 32px;
-    }
-    
-    /* Media Queries معدلة */
-    @media only screen and (max-width: 650px) {
-      .container {
-        width: 95% !important;
-        margin: 10px auto !important;
-        border-radius: 16px !important;
-      }
-      
-      .header {
-        padding: 0px 15px !important;
-      }
-      
-      .logo-container {
-        width: 220px !important;
-        height: 220px !important;
-        padding: 8px !important;
-      }
-      
-      .content {
-        padding: 24px 20px !important;
-      }
-      
-      .code-number {
-        font-size: 28px !important;
-        letter-spacing: 5px !important;
-        min-width: 200px !important;
-        padding: 14px 20px !important;
-      }
-      
-      .title {
-        font-size: 20px !important;
-      }
-      
-      .description {
-        font-size: 14px !important;
-        margin-bottom: 25px !important;
-      }
-      
-      .verification-box {
-        padding: 20px !important;
-        margin: 20px 0 !important;
-      }
-      
-      .verification-label {
-        font-size: 15px !important;
-        margin-bottom: 18px !important;
-      }
-    }
-    
-    @media only screen and (max-width: 480px) {
-      .header {
-        padding: 0px 12px !important;
-      }
-      
-      .logo-container {
-        width: 200px !important;
-        height: 200px !important;
-        padding: 6px !important;
-      }
-      
-      .content {
-        padding: 20px 16px !important;
-      }
-      
-      .title {
-        font-size: 18px !important;
-        margin-bottom: 12px !important;
-      }
-      
-      .description {
-        font-size: 13.5px !important;
-        line-height: 1.7 !important;
-        margin-bottom: 20px !important;
-      }
-      
-      .code-number {
-        font-size: 24px !important;
-        letter-spacing: 4px !important;
-        min-width: 180px !important;
-        padding: 12px 18px !important;
-      }
-      
-      .verification-box {
-        padding: 18px !important;
-        margin: 18px 0 !important;
-      }
-      
-      .verification-label {
-        font-size: 14px !important;
-        margin-bottom: 16px !important;
-      }
-      
-      .time-info {
-        font-size: 13px !important;
-        margin-top: 20px !important;
-      }
-      
-      .warning-box {
-        margin-top: 20px !important;
-        padding: 14px !important;
-      }
-      
-      .warning-text {
-        font-size: 12.5px !important;
-        line-height: 1.6 !important;
-      }
-      
-      .footer {
-        padding: 15px 16px !important;
-        font-size: 11px !important;
-      }
-    }
-    
-    @media only screen and (max-width: 360px) {
-      .logo-container {
-        width: 100px !important;
-        height: 100px !important;
-      }
-      
-      .code-number {
-        font-size: 22px !important;
-        letter-spacing: 3px !important;
-        min-width: 160px !important;
-        padding: 10px 16px !important;
-      }
-      
-      .verification-code {
-        min-width: 180px !important;
-        padding: 12px 16px !important;
-      }
-      
-      .content {
-        padding: 18px 14px !important;
-      }
-    }
-    
-    /* تحسين مظهر رمز التحقق */
-    .verification-code {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 16px 24px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin: 10px auto;
-      text-align: center;
-      min-width: 220px;
-    }
-
-    .code-number {
-      color: #073b74;
-      font-size: 32px;
-      font-weight: bold;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 6px;
-      background-color: #f0f7ff;
-      border: 2px solid #073b74;
-      padding: 16px 24px;
-      border-radius: 10px;
-      display: block;
-      margin: 0;
-    }
-    
-    .copy-success {
-      color: #2ecc71;
-      font-size: 13px;
-      margin-top: 8px;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      height: 0;
-      overflow: hidden;
-      font-weight: bold;
-    }
-    
-    .copy-success.show {
-      opacity: 1;
-      height: auto;
-      margin-top: 12px;
-    }
-    
-    /* تلميح عند التحويم على الرمز */
-    .verification-code::after {
-      content: "انقر لنسخ الرمز";
-      position: absolute;
-      bottom: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0,0,0,0.85);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      z-index: 10;
-    }
-    
-    .verification-code:hover::after {
-      opacity: 1;
+      padding: 35px 30px;
     }
     
     .title {
       text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: #333333;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
       margin-bottom: 16px;
+      line-height: 1.4;
     }
     
     .description {
       text-align: center;
-      font-size: 15px;
-      line-height: 1.8;
-      color: #555c67;
-      margin-bottom: 30px;
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: var(--text-light);
+      margin-bottom: 32px;
+      padding: 0 10px;
     }
     
     .verification-box {
-      border: 1px solid #e1e5eb;
-      border-radius: 16px;
-      padding: 24px;
-      margin: 25px 0;
-      background-color: #f9fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      margin: 30px 0;
+      background-color: var(--background-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     
     .verification-label {
-      font-size: 16px;
-      color: #222b35;
+      font-size: 18px;
+      color: var(--text-dark);
       text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
       display: block;
     }
     
-    .time-info {
-      font-size: 14px;
-      color: #7b8491;
+    .verification-code {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
       text-align: center;
-      margin-top: 24px;
-      line-height: 1.6;
+      width: 100%;
+      max-width: 320px;
+    }
+    
+    .verification-code:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
+    }
+    
+    .code-number {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: 800;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      background-color: var(--secondary-color);
+      border: 2px dashed var(--primary-color);
+      padding: 22px 30px;
+      border-radius: 14px;
+      display: block;
+      margin: 0;
+      width: 100%;
+      user-select: all;
+    }
+    
+    .copy-success {
+      color: var(--success);
+      font-size: 13.5px;
+      margin-top: 12px;
+      text-align: center;
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-success.show {
+      opacity: 1;
+      height: 22px;
+    }
+    
+    .time-info {
+      font-size: 14.5px;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 26px;
+      line-height: 1.7;
+    }
+    
+    .timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      background: #fff9e6;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 1px solid #ffeaa7;
+    }
+    
+    .timer-icon {
+      font-size: 18px;
+    }
+    
+    .timer-text {
+      color: var(--text-dark);
+    }
+    
+    .highlight {
+      color: var(--primary);
+      font-weight: 700;
     }
     
     .warning-box {
-      margin-top: 24px;
-      background-color: #f3f4f8;
-      border-top: 3px solid #073b74;
-      border-radius: 10px;
-      padding: 16px;
+      margin-top: 28px;
+      background-color: #fff9e6;
+      border-right: 4px solid var(--warning);
+      border-radius: 12px;
+      padding: 18px;
     }
     
     .warning-content {
@@ -313,39 +214,182 @@ export const html = (otp: string) => `<!DOCTYPE html>
     
     .warning-icon {
       font-size: 20px;
-      color: #073b74;
+      color: var(--warning);
       flex-shrink: 0;
       margin-top: 2px;
     }
     
     .warning-text {
-      font-size: 13px;
-      color: #444c58;
+      font-size: 13.5px;
+      color: var(--text-medium);
       text-align: right;
       line-height: 1.7;
     }
     
     .alert {
-      color: #073b74;
-      font-weight: bold;
+      color: var(--warning);
+      font-weight: 700;
+    }
+    
+    .security-note {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: 26px;
+      padding: 0 5px;
     }
     
     .footer {
       background-color: #f7f7fb;
-      padding: 18px 20px;
+      padding: 22px 30px;
       text-align: center;
-      font-size: 12px;
-      color: #818896;
+      font-size: 13px;
+      color: #7e8796;
       line-height: 1.7;
+      border-top: 1px solid #eee;
     }
     
-    .link {
-      color: #0066cc;
-      text-decoration: none;
+    .brand {
+      color: var(--primary);
+      font-weight: 700;
     }
     
-    .link:hover {
-      text-decoration: underline;
+    /* استعلامات الوسائط المحسنة */
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        border-radius: 16px;
+      }
+      
+      .header {
+        padding: 12px 0 20px;
+      }
+      
+      .logo-container {
+        width: 120px;
+        height: 120px;
+        padding: 12px;
+      }
+      
+      .content {
+        padding: 26px 22px;
+      }
+      
+      .title {
+        font-size: 23px;
+        margin-bottom: 14px;
+      }
+      
+      .description {
+        font-size: 14.5px;
+        margin-bottom: 26px;
+        padding: 0 5px;
+      }
+      
+      .verification-box {
+        padding: 22px 18px;
+        margin: 22px 0;
+      }
+      
+      .verification-label {
+        font-size: 15px;
+        margin-bottom: 18px;
+      }
+      
+      .code-number {
+        font-size: 24px;
+        letter-spacing: 4px;
+        padding: 18px 20px;
+      }
+      
+      .timer {
+        padding: 6px 14px;
+      }
+      
+      .security-note {
+        font-size: 13.5px;
+        margin-top: 22px;
+      }
+      
+      .warning-box {
+        margin-top: 22px;
+        padding: 16px;
+      }
+      
+      .footer {
+        padding: 18px 22px;
+        font-size: 12px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .content {
+        padding: 22px 18px;
+      }
+      
+      .title {
+        font-size: 21px;
+      }
+      
+      .description {
+        font-size: 14px;
+      }
+      
+      .code-number {
+        font-size: 22px;
+        letter-spacing: 3px;
+        padding: 16px 18px;
+      }
+      
+      .verification-box {
+        padding: 20px 16px;
+      }
+      
+      .timer {
+        font-size: 13.5px;
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .logo-container {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .content {
+        padding: 20px 16px;
+      }
+      
+      .title {
+        font-size: 20px;
+      }
+      
+      .code-number {
+        font-size: 20px;
+        letter-spacing: 2px;
+        padding: 14px 16px;
+      }
+      
+      .verification-label {
+        font-size: 14.5px;
+      }
+    }
+    
+    /* تأثيرات النسخ */
+    .copied {
+      animation: copyEffect 0.5s ease;
+    }
+    
+    @keyframes copyEffect {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
@@ -379,9 +423,8 @@ export const html = (otp: string) => `<!DOCTYPE html>
       <div class="verification-box">
         <span class="verification-label">رمز التحقق الخاص بك</span>
         
-        <!-- رمز التحقق فقط - يمكن نسخه بالنقر -->
-        <div id="verificationCode" 
-             class="verification-code">
+        <!-- رمز التحقق -->
+        <div id="verificationCode" class="verification-code">
           <span class="code-number">${otp}</span>
         </div>
         
@@ -392,18 +435,20 @@ export const html = (otp: string) => `<!DOCTYPE html>
         
         <!-- معلومات الصلاحية -->
         <div class="time-info">
-          <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <span style="font-size: 18px;">⏱️</span>
-            <span>هذا الرمز صالح لمدة <strong style="color:#073b74;">10 دقائق</strong> فقط</span>
+          <div class="timer">
+            <span class="timer-icon">⏱️</span>
+            <span class="timer-text">
+              هذا الرمز صالح لمدة <span class="highlight">10 دقائق</span> فقط
+            </span>
           </div>
-          <div style="font-size: 13px; color: #9aa1ab; margin-top: 4px;">
+          <div style="font-size: 13px; color: #9aa1ab; margin-top: 8px;">
             (انقر على الرمز أعلاه لنسخه)
           </div>
         </div>
       </div>
 
       <!-- فقرة التنبيه الأمني -->
-      <p style="font-size: 14px; line-height: 1.8; color: #555c67; text-align: right; margin-top: 24px;">
+      <p class="security-note">
         إن لم تكن أنت من طلب تسجيل الدخول، ننصحك بتسجيل الدخول فوراً والتحقق من أمان حسابك،
         أو
         <a href="https://example.com/support" class="link">
@@ -426,7 +471,7 @@ export const html = (otp: string) => `<!DOCTYPE html>
 
     <!-- الفوتر -->
     <div class="footer">
-      فريق <strong style="color:#073b74;">هكرها</strong> – كلية الهندسة المعلوماتية، جامعة حلب<br>
+      فريق <span class="brand">هكرها</span> – كلية الهندسة المعلوماتية، جامعة حلب<br>
       جميع الحقوق محفوظة © 2025<br>
       هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.
     </div>
@@ -444,15 +489,38 @@ export const paymentHtml = (
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>كود دفع الكورس - هكرها</title>
   <style>
+    :root {
+      --primary-color: #073b74;
+      --secondary-color: #f0f7ff;
+      --text-dark: #222b35;
+      --text-medium: #444c58;
+      --text-light: #555c67;
+      --text-muted: #818896;
+      --border-color: #e1e5eb;
+      --background-light: #f9fafc;
+      --background-page: #f3f4f8;
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0;
-      padding: 0;
-      background-color: #f3f4f8;
+      padding: 20px;
+      background-color: var(--background-page);
       direction: rtl;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
       line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     
     .container {
@@ -466,8 +534,8 @@ export const paymentHtml = (
     }
     
     .header {
-      background-color: #073b74;
-      padding: 0px 10px;
+      background-color: var(--primary-color);
+      padding: 5px 0 15px;
       text-align: center;
     }
     
@@ -485,107 +553,217 @@ export const paymentHtml = (
       width: 100%;
       height: 100%;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 8px;
     }
     
     .content {
-      padding: 32px;
+      padding: 30px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 0 0 20px 0;
+      line-height: 1.4;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-light);
+      margin-bottom: 30px;
+      padding: 0 5px;
     }
 
     /* صندوق معلومات الطالب */
     .student-box {
-      border: 1px solid #e1e5eb;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px 0;
-      background-color: #f9fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin: 25px 0;
+      background-color: var(--background-light);
     }
 
     .student-line {
-      font-size: 15px;
+  font-size: 15px;
       color: #444c58;
       margin-bottom: 10px;
       font-weight: bold;
     }
+    
+    .student-line:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .student-label {
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    
+    .student-value {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
 
     /* صندوق الكود */
     .verification-box {
-      border: 1px solid #e1e5eb;
-      border-radius: 16px;
-      padding: 24px;
-      margin: 25px 0;
-      background-color: #f9fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      margin: 30px 0;
+      background-color: var(--background-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .verification-label {
-      font-size: 16px;
-      color: #222b35;
+      font-size: 18px;
+      color: var(--text-dark);
       text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
       display: block;
     }
 
     .verification-code {
       cursor: pointer;
       transition: all 0.3s ease;
-      padding: 16px 24px;
-      border-radius: 12px;
+      padding: 0;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       margin: 10px auto;
       text-align: center;
-      min-width: 220px;
+      width: 100%;
+      max-width: 320px;
+    }
+    
+    .verification-code:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
     }
 
     .code-number {
-      color: #073b74;
-      font-size: 32px;
-      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: 800;
       font-family: 'Courier New', monospace;
-      letter-spacing: 6px;
-      background-color: #f0f7ff;
-      border: 2px solid #073b74;
-      padding: 16px 24px;
-      border-radius: 10px;
+      letter-spacing: 2px;
+      background-color: var(--secondary-color);
+      border: 2px dashed var(--primary-color);
+      padding: 22px 30px;
+      border-radius: 14px;
       display: block;
       margin: 0;
+      width: 100%;
+      user-select: all;
     }
 
-    .title {
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: #333333;
-      margin-bottom: 16px;
-    }
-
-    .description {
-      text-align: center;
+    .instructions {
       font-size: 15px;
       line-height: 1.8;
-      color: #555c67;
-      margin-bottom: 24px;
-    }
-
-    .footer {
-      background-color: #f7f7fb;
-      padding: 18px 20px;
-      text-align: center;
-      font-size: 12px;
-      color: #818896;
-      line-height: 1.7;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: 30px;
+      padding: 0 5px;
     }
 
     .link {
       color: #0066cc;
       text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
     }
     
     .link:hover {
       text-decoration: underline;
+      color: #0052a3;
+    }
+
+    .footer {
+      background-color: #f7f7fb;
+      padding: 22px 30px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      border-top: 1px solid #eee;
+    }
+    
+    .brand {
+      color: var(--primary-color);
+      font-weight: 800;
+      font-size: 15px;
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        border-radius: 20px;
+      }
+      
+      .content {
+        padding: 24px;
+      }
+      
+      .title {
+        font-size: 22px;
+      }
+      
+      .description, .instructions {
+        font-size: 15px;
+      }
+      
+      .student-box, .verification-box {
+        padding: 18px;
+      }
+      
+      .code-number {
+        font-size: 20px;
+        padding: 18px 20px;
+      }
+      
+      .logo-container {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .footer {
+        padding: 18px 20px;
+        font-size: 12px;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .content {
+        padding: 20px;
+      }
+      
+      .student-line {
+        flex-direction: column;
+        font-size: 15px;
+      }
+      
+      .student-label {
+        margin-bottom: 5px;
+      }
+      
+      .code-number {
+        font-size: 18px;
+        padding: 16px;
+        letter-spacing: 1px;
+      }
     }
   </style>
 </head>
@@ -602,16 +780,22 @@ export const paymentHtml = (
 
     <div class="content">
       
-      <h1 class="title">كود دفع كورس ${courseName}</h1>
+      <h1 class="title">كود دفع الكورس</h1>
 
       <p class="description">
-        تم إنشاء كود الدفع الخاص بك لإتمام الاشتراك في هذا الكورس.
+        تم إنشاء كود الدفع الخاص بك لإتمام الاشتراك في هذا الكورس
       </p>
 
       <!-- صندوق معلومات الطالب -->
       <div class="student-box">
-        <div class="student-line">اسم الطالب: ${studentName}</div>
-        <div class="student-line">الرقم الجامعي: ${universityNumber}</div>
+        <div class="student-line">
+          <span class="student-label">اسم الطالب:</span>
+          <span class="student-value">عبد</span>
+        </div>
+        <div class="student-line">
+          <span class="student-label">الرقم الجامعي:</span>
+          <span class="student-value">${universityNumber}</span>
+        </div>
       </div>
 
       <!-- صندوق الكود -->
@@ -619,21 +803,21 @@ export const paymentHtml = (
         <span class="verification-label">كود الدفع</span>
         
         <div class="verification-code">
-          <span class="code-number">${code}</span>
+          <span class="code-number">d4d7e7d7c4</span>
         </div>
       </div>
 
-      <p style="font-size: 14px; line-height: 1.8; color: #555c67; text-align: right; margin-top: 24px;">
-        بعد الدفع سيتم تفعيل اشتراكك في الكورس.  
+      <p class="instructions">
+        بعد الدفع سيتم تفعيل اشتراكك في الكورس تلقائياً.<br>
         في حال وجود أي مشكلة يمكنك <a href="https://example.com/support" class="link">التواصل مع الدعم</a>.
       </p>
 
     </div>
 
     <div class="footer">
-      فريق <strong style="color:#073b74;">هكرها</strong> – كلية الهندسة المعلوماتية، جامعة حلب<br>
+      فريق <span class="brand">هكرها</span> – كلية الهندسة المعلوماتية، جامعة حلب<br>
       جميع الحقوق محفوظة © 2025<br>
-      هذه رسالة آلية، الرجاء عدم الرد.
+      هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.
     </div>
 
   </div>
@@ -644,15 +828,40 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>إعادة تعيين كلمة المرور - هكرها</title>
   <style>
-    body {
+    :root {
+      --primary-color: #073b74;
+      --secondary-color: #f0f7ff;
+      --text-dark: #222b35;
+      --text-medium: #444c58;
+      --text-light: #555c67;
+      --text-muted: #818896;
+      --border-color: #e1e5eb;
+      --background-light: #f9fafc;
+      --background-page: #f3f4f8;
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background-color: #f3f4f8;
+    }
+    
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--background-page);
       direction: rtl;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
       line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     
     .container {
@@ -666,8 +875,8 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .header {
-      background-color: #073b74;
-      padding: 0px 10px;
+      background-color: var(--primary-color);
+      padding: 5px 0 15px;
       text-align: center;
     }
     
@@ -682,269 +891,198 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .logo-img {
-      width: 100%;
+        width: 100%;
       height: 100%;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 8px;
     }
     
     .content {
-      padding: 32px;
-    }
-    
-    /* Media Queries */
-    @media only screen and (max-width: 650px) {
-      .container {
-        width: 95% !important;
-        margin: 10px auto !important;
-        border-radius: 16px !important;
-      }
-      
-      .header {
-        padding: 0px 15px !important;
-      }
-      
-      .logo-container {
-        width: 220px !important;
-        height: 220px !important;
-        padding: 8px !important;
-      }
-      
-      .content {
-        padding: 24px 20px !important;
-      }
-      
-      .code-number {
-        font-size: 28px !important;
-        letter-spacing: 5px !important;
-        min-width: 200px !important;
-        padding: 14px 20px !important;
-      }
-      
-      .title {
-        font-size: 20px !important;
-      }
-      
-      .description {
-        font-size: 14px !important;
-        margin-bottom: 25px !important;
-      }
-      
-      .verification-box {
-        padding: 20px !important;
-        margin: 20px 0 !important;
-      }
-      
-      .verification-label {
-        font-size: 15px !important;
-        margin-bottom: 18px !important;
-      }
-    }
-    
-    @media only screen and (max-width: 480px) {
-      .header {
-        padding: 0px 12px !important;
-      }
-      
-      .logo-container {
-        width: 200px !important;
-        height: 200px !important;
-        padding: 6px !important;
-      }
-      
-      .content {
-        padding: 20px 16px !important;
-      }
-      
-      .title {
-        font-size: 18px !important;
-        margin-bottom: 12px !important;
-      }
-      
-      .description {
-        font-size: 13.5px !important;
-        line-height: 1.7 !important;
-        margin-bottom: 20px !important;
-      }
-      
-      .code-number {
-        font-size: 24px !important;
-        letter-spacing: 4px !important;
-        min-width: 180px !important;
-        padding: 12px 18px !important;
-      }
-      
-      .verification-box {
-        padding: 18px !important;
-        margin: 18px 0 !important;
-      }
-      
-      .verification-label {
-        font-size: 14px !important;
-        margin-bottom: 16px !important;
-      }
-      
-      .time-info {
-        font-size: 13px !important;
-        margin-top: 20px !important;
-      }
-      
-      .warning-box {
-        margin-top: 20px !important;
-        padding: 14px !important;
-      }
-      
-      .warning-text {
-        font-size: 12.5px !important;
-        line-height: 1.6 !important;
-      }
-      
-      .footer {
-        padding: 15px 16px !important;
-        font-size: 11px !important;
-      }
-    }
-    
-    @media only screen and (max-width: 360px) {
-      .logo-container {
-        width: 180px !important;
-        height: 180px !important;
-      }
-      
-      .code-number {
-        font-size: 22px !important;
-        letter-spacing: 3px !important;
-        min-width: 160px !important;
-        padding: 10px 16px !important;
-      }
-      
-      .verification-code {
-        min-width: 180px !important;
-        padding: 12px 16px !important;
-      }
-      
-      .content {
-        padding: 18px 14px !important;
-      }
-    }
-    
-    /* تحسين مظهر رمز التحقق */
-    .verification-code {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 16px 24px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin: 10px auto;
-      text-align: center;
-      min-width: 220px;
-    }
-
-    .code-number {
-      color: #073b74;
-      font-size: 32px;
-      font-weight: bold;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 6px;
-      background-color: #fef2f2;
-      border: 2px solid #073b74;
-      padding: 16px 24px;
-      border-radius: 10px;
-      display: block;
-      margin: 0;
-    }
-    
-    .copy-success {
-      color: #2ecc71;
-      font-size: 13px;
-      margin-top: 8px;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      height: 0;
-      overflow: hidden;
-      font-weight: bold;
-    }
-    
-    .copy-success.show {
-      opacity: 1;
-      height: auto;
-      margin-top: 12px;
-    }
-    
-    /* تلميح عند التحويم على الرمز */
-    .verification-code::after {
-      content: "انقر لنسخ الرمز";
-      position: absolute;
-      bottom: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0,0,0,0.85);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      z-index: 10;
-    }
-    
-    .verification-code:hover::after {
-      opacity: 1;
+      padding: 35px 30px;
     }
     
     .title {
       text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: #333333;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
       margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    
+    .title-icon {
+      font-size: 26px;
     }
     
     .description {
       text-align: center;
-      font-size: 15px;
-      line-height: 1.8;
-      color: #555c67;
-      margin-bottom: 30px;
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: var(--text-light);
+      margin-bottom: 32px;
+      padding: 0 10px;
     }
     
     .verification-box {
-      border: 1px solid #e1e5eb;
-      border-radius: 16px;
-      padding: 24px;
-      margin: 25px 0;
-      background-color: #fefafb;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      margin: 30px 0;
+      background-color: var(--background-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     
     .verification-label {
-      font-size: 16px;
-      color: #222b35;
+      font-size: 18px;
+      color: var(--text-dark);
       text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
       display: block;
     }
     
-    .time-info {
-      font-size: 14px;
-      color: #7b8491;
+    .verification-code {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
       text-align: center;
-      margin-top: 24px;
-      line-height: 1.6;
+      width: 100%;
+      max-width: 320px;
+    }
+    
+    .verification-code:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
+    }
+    
+    .code-number {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: 800;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      background-color: var(--secondary-color);
+      border: 2px dashed var(--primary-color);
+      padding: 22px 30px;
+      border-radius: 14px;
+      display: block;
+      margin: 0;
+      width: 100%;
+      user-select: all;
+    }
+    
+    .copy-success {
+      color: var(--success);
+      font-size: 13.5px;
+      margin-top: 12px;
+      text-align: center;
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-success.show {
+      opacity: 1;
+      height: 22px;
+    }
+    
+    .time-info {
+      font-size: 14.5px;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 26px;
+      line-height: 1.7;
+    }
+    
+    .timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      background: #fff9e6;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 1px solid #ffeaa7;
+    }
+
+        .timer-icon {
+      font-size: 18px;
+    }
+    
+    .timer-text {
+      color: var(--text-dark);
+    }
+    
+    .highlight {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    .instructions {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-medium);
+      text-align: right;
+      margin-top: 26px;
+      padding: 0 5px;
+      background: #f9f9f9;
+      padding: 16px;
+      border-radius: 12px;
+      border-right: 4px solid var(--primary);
+    }
+    
+    .instruction-title {
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .instruction-steps {
+      margin-right: 24px;
+      margin-top: 10px;
+    }
+    
+    .step {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .step-number {
+      background: var(--primary-color);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 2px;
     }
     
     .warning-box {
-      margin-top: 24px;
-      background-color: #fef2f2;
-      border-top: 3px solid #073b74;
-      border-radius: 10px;
-      padding: 16px;
+      margin-top: 28px;
+      background-color: #fff9e6;
+      border-right: 4px solid var(--warning);
+      border-radius: 12px;
+      padding: 18px;
     }
     
     .warning-content {
@@ -955,39 +1093,164 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     
     .warning-icon {
       font-size: 20px;
-      color: #073b74;
+      color: var(--warning);
       flex-shrink: 0;
       margin-top: 2px;
     }
     
     .warning-text {
-      font-size: 13px;
-      color: #444c58;
+      font-size: 13.5px;
+      color: var(--text-medium);
       text-align: right;
       line-height: 1.7;
     }
     
     .alert {
-      color: #0066cc;
-      font-weight: bold;
+      color: var(--warning);
+      font-weight: 700;
     }
     
     .footer {
-      background-color: #f7f7fb;
-      padding: 18px 20px;
+      background-color: #fef5f5;
+      padding: 20px 28px;
       text-align: center;
-      font-size: 12px;
-      color: #818896;
+      font-size: 12.5px;
+      color: #888;
       line-height: 1.7;
+      border-top: 1px solid #ffeaea;
+    }
+    
+    .brand {
+      color: var(--primary);
+      font-weight: 700;
     }
     
     .link {
-      color: #0066cc;
+      color: var(--primary);
       text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
     }
     
     .link:hover {
       text-decoration: underline;
+      color: var(--primary-dark);
+    }
+    
+    /* استعلامات الوسائط المحسنة */
+    @media (max-width: 550px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        border-radius: 16px;
+        max-width: 100%;
+      }
+      
+      .header {
+        padding: 10px 0 18px;
+      }
+      
+      .logo-container {
+        width: 100px;
+        height: 100px;
+        padding: 12px;
+      }
+      
+      .content {
+        padding: 24px 20px;
+      }
+      
+      .title {
+        font-size: 22px;
+      }
+      
+      .title-icon {
+        font-size: 24px;
+      }
+      
+      .description {
+        font-size: 14.5px;
+        margin-bottom: 24px;
+      }
+      
+      .verification-box {
+        padding: 22px 18px;
+        margin: 22px 0;
+      }
+      
+      .verification-label {
+        font-size: 15px;
+        margin-bottom: 16px;
+      }
+      
+      .code-number {
+        font-size: 22px;
+        letter-spacing: 3px;
+        padding: 16px 20px;
+      }
+      
+      .timer {
+        padding: 6px 14px;
+      }
+      
+      .instructions {
+        font-size: 13.5px;
+        margin-top: 22px;
+        padding: 14px;
+      }
+      
+      .warning-box {
+        margin-top: 22px;
+        padding: 16px;
+      }
+      
+      .footer {
+        padding: 16px 20px;
+        font-size: 12px;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .content {
+        padding: 20px 16px;
+      }
+      
+      .title {
+        font-size: 20px;
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .description {
+        font-size: 14px;
+      }
+      
+      .code-number {
+        font-size: 20px;
+        letter-spacing: 2px;
+        padding: 14px 16px;
+      }
+      
+      .verification-box {
+        padding: 20px 16px;
+      }
+      
+      .instruction-steps {
+        margin-right: 20px;
+      }
+    }
+    
+    /* تأثيرات النسخ */
+    .copied {
+      animation: copyEffect 0.5s ease;
+    }
+    
+    @keyframes copyEffect {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
@@ -1008,7 +1271,8 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     <div class="content">
       <!-- العنوان -->
       <h1 class="title">
-        طلب إعادة تعيين كلمة المرور 🔒
+        <span class="title-icon">🔒</span>
+        طلب إعادة تعيين كلمة المرور
       </h1>
 
       <!-- فقرة الشرح -->
@@ -1021,9 +1285,8 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       <div class="verification-box">
         <span class="verification-label">رمز التحقق لإعادة تعيين كلمة المرور</span>
         
-        <!-- رمز التحقق فقط - يمكن نسخه بالنقر -->
-        <div id="verificationCode" 
-             class="verification-code">
+        <!-- رمز التحقق -->
+        <div id="verificationCode" class="verification-code">
           <span class="code-number">${otp}</span>
         </div>
         
@@ -1034,21 +1297,38 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
         
         <!-- معلومات الصلاحية -->
         <div class="time-info">
-          <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <span style="font-size: 18px;">⏱️</span>
-            <span>هذا الرمز صالح لمدة <strong style="color:#d93c3c;">10 دقائق</strong> فقط</span>
+          <div class="timer">
+            <span class="timer-icon">⏱️</span>
+            <span class="timer-text">
+              هذا الرمز صالح لمدة <span class="highlight">10 دقائق</span> فقط
+            </span>
           </div>
-          <div style="font-size: 13px; color: #9aa1ab; margin-top: 4px;">
+          <div style="font-size: 13px; color: #c97a7a; margin-top: 8px;">
             (انقر على الرمز أعلاه لنسخه)
           </div>
         </div>
       </div>
 
       <!-- التعليمات -->
-      <p style="font-size: 14px; line-height: 1.8; color: #555c67; text-align: right; margin-top: 24px;">
-        بعد نسخ الرمز، الرجاء العودة إلى التطبيق وإدخال الرمز في الحقل المخصص، 
-        ثم إنشاء كلمة مرور جديدة لحسابك.
-      </p>
+      <div class="instructions">
+        <div class="instruction-title">
+          📝 تعليمات الاستخدام:
+        </div>
+        <div class="instruction-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>انسخ الرمز أعلاه بالنقر عليه</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>ارجع إلى التطبيق وأدخل الرمز في الحقل المخصص</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>أنشئ كلمة مرور جديدة قوية لحسابك</div>
+          </div>
+        </div>
+      </div>
 
       <!-- مربع الملاحظة -->
       <div class="warning-box">
@@ -1066,9 +1346,12 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
 
     <!-- الفوتر -->
     <div class="footer">
-      فريق <strong style="color:#d93c3c;">هكرها</strong> – كلية الهندسة المعلوماتية، جامعة حلب<br>
+      فريق <span class="brand">هكرها</span> – كلية الهندسة المعلوماتية، جامعة حلب<br>
       جميع الحقوق محفوظة © 2025<br>
-      هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.
+      هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.<br>
+      <small style="color: #aaa; font-size: 11px;">
+        للحصول على المساعدة، <a href="https://example.com/support" class="link">اتصل بالدعم</a>
+      </small>
     </div>
   </div>
 </body>

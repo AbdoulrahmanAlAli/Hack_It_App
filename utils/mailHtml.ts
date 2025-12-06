@@ -793,7 +793,7 @@ export const paymentHtml = (
           <span class="student-value">عبد</span>
         </div>
         <div class="student-line">
-          <span class="student-label">الرقم الجامعي:</span>
+          <span class="student-label">${studentName}</span>
           <span class="student-value">${universityNumber}</span>
         </div>
       </div>
@@ -803,7 +803,7 @@ export const paymentHtml = (
         <span class="verification-label">كود الدفع</span>
         
         <div class="verification-code">
-          <span class="code-number">d4d7e7d7c4</span>
+          <span class="code-number">${code}</span>
         </div>
       </div>
 

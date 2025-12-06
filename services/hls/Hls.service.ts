@@ -65,44 +65,31 @@ class HlsService {
     studentId: string,
     courseId: string,
     sessionId: string
-  ): Promise<{ playlistUrl: string; expiresIn: number }> {
-    // التحقق من الطالب
+  ) {
     const student = await Student.findById(studentId).select(
       "enrolledCourses device_id available suspended"
     );
     if (!student) throw new NotFoundError("الطالب غير موجود");
     if (!student.available) throw new BadRequestError("الحساب غير مفعل");
-    if (student.suspended) throw new BadRequestError("حسابك مقيد");
+    if (student.suspended) throw new BadRequestError("الحساب مقيد");
 
-    // التحقق من الكورس
-    const course = await Course.findById(courseId).select("_id");
-    if (!course) throw new NotFoundError("الكورس غير موجود");
-
-    // التحقق أن الطالب مسجّل في الكورس
     const isEnrolled = student.enrolledCourses.some(
       (id) => id.toString() === courseId
     );
+
     if (!isEnrolled) {
       throw new BadRequestError("غير مسجل في هذا الكورس");
     }
 
-    // التحقق من الجلسة
-    const session = await Session.findOne({ _id: sessionId, courseId }).select(
-      "_id"
-    );
+    // تحقق أن الجلسة موجودة
+    const session = await Session.findOne({ _id: sessionId, courseId });
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
-    // مدة صلاحية التوكين بالثواني (افتراضي 10 دقائق)
     const expiresInSeconds = Number(process.env.HLS_TOKEN_EXPIRES_IN || 600);
 
-    // إصدار hlsToken موقّت مربوط بـ:
-    // - الطالب
-    // - الكورس
-    // - الجلسة
-    // - الجهاز
     const hlsToken = signHlsToken(
       {
-        sub: student.id,
+        sub: studentId,
         courseId,
         sessionId,
         deviceId: student.device_id,
@@ -110,18 +97,12 @@ class HlsService {
       expiresInSeconds
     );
 
-    // الـ baseUrl من env (أو localhost لو ما هو موجود)
-    const baseUrl = process.env.BASE_URL || "http://localhost:1000";
-
-    // رابط الـ playlist الذي سيستعمله Flutter / Hls.js
+    const baseUrl = process.env.BASE_URL!;
     const playlistUrl = `${baseUrl}/api/hackit/hls/playlist/${courseId}/${sessionId}?hlsToken=${encodeURIComponent(
       hlsToken
     )}`;
 
-    return {
-      playlistUrl,
-      expiresIn: expiresInSeconds,
-    };
+    return { playlistUrl, expiresIn: expiresInSeconds };
   }
 
   // الحصول على AES key للتشفير

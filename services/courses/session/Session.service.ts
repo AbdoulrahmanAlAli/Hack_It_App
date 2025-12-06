@@ -15,6 +15,8 @@ import path from "path";
 import { number } from "joi";
 import { generateSignedUrl } from "../../../utils/wasabi.service";
 import { Exam } from "../../../models/courses/exam/Exam.model";
+import { hlsController } from "../../../controllers/hls/Hls.controller";
+import { HlsService } from "../../hls/Hls.service";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -57,8 +59,7 @@ class CtrlSessionService {
     return { message: "تم إنشاء الجلسة بنجاح" };
   }
 
-  // ~ GET /api/sessions/:id - Get session by ID
-  static async getSessionById(id: string) {
+  static async getSessionById(studentId: string, id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestError("معرف الجلسة غير صالح");
     }
@@ -70,17 +71,22 @@ class CtrlSessionService {
 
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
-    const sessionObject = session.toObject();
+    const sessionObj = session.toObject();
 
-    const courseId = sessionObject.courseId.toString();
-    const sessionId = sessionObject._id;
-    const videoKey = sessionObject.video;
+    const courseId = sessionObj.courseId.toString();
+    const sessionId = session.id;
+
+    const { playlistUrl, expiresIn } =
+      await HlsService.generatePlaylistUrlForStudent(
+        studentId,
+        courseId,
+        sessionId
+      );
 
     return {
-      ...sessionObject,
-      videoKey, // مفيد لو تحتاجه في لوحة تحكم الأدمن مثلاً
-      playlistEndpoint: `/api/hackit/hls/playlist/${courseId}/${sessionId}`,
-      // ملاحظة: لا نعيد أي رابط مباشر لـ Wasabi هنا 👈
+      ...sessionObj,
+      playlistUrl,
+      playlistExpiresIn: expiresIn,
     };
   }
 

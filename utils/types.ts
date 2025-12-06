@@ -22,6 +22,17 @@ export interface JWTPayload {
 }
 
 /**
+ * انشاء hls token
+ */
+export interface HlsTokenPayload {
+  sub: string; // student id
+  courseId: string;
+  sessionId: string;
+  deviceId?: string;
+  type: "hls";
+}
+
+/**
  * من اجل التحقق
  */
 export interface AuthenticatedRequest extends Request {

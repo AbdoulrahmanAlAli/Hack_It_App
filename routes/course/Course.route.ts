@@ -42,4 +42,13 @@ router
     ctrlCourseController.updateCourseImage
   );
 
+// ~ Patch => /api/hackit/ctrl/course/removeStudent/course/:courseId
+router
+  .route("/removeStudent/course/:courseId")
+  .patch(
+    verifyToken,
+    checkRole(["admin"]),
+    ctrlCourseController.RemoveStudentFromCourse
+  );
+
 export default router;

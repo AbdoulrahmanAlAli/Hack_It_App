@@ -346,6 +346,53 @@ class CtrlCourseService {
       return `${pad(minutes)}:${pad(seconds)}`;
     }
   }
+
+  // ~ Patch => /api/hackit/ctrl/course/removeStudent/course/courseId ~ Remove Student From Teacher`s Course
+  static async RemoveStudentFromCourse(courseId: string, studentId: string) {
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      throw new NotFoundError("معرف الكورس غير صالح");
+    }
+    if (!mongoose.Types.ObjectId.isValid(studentId)) {
+      throw new NotFoundError("معرف الطالب غير صالح");
+    }
+    const course = await Course.findById(courseId);
+    if (!course) throw new NotFoundError("الكورس غير موجود");
+
+    const student = await Student.findById(studentId);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    if (!student.enrolledCourses.includes(course._id as any)) {
+      throw new BadRequestError("الطالب غير مسجل في هذا الكورس");
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      await Student.findByIdAndUpdate(
+        studentId,
+        { $pull: { enrolledCourses: courseId } },
+        { session, new: true }
+      );
+
+      await Course.findByIdAndUpdate(
+        courseId,
+        { $pull: { students: studentId } },
+        { session, new: true }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return {
+        message: "تم إزالة الطالب من الكورس بنجاح",
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
 }
 
 export { CtrlCourseService };

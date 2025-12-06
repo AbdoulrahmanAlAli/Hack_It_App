@@ -17,12 +17,16 @@ class CtrlCourseController {
 
   // ~ GET /api/hackit/ctrl/course/:id - Get course by ID
   getCourseById = asyncHandler(async (req: Request, res: Response) => {
-     const user = (req as AuthenticatedRequest).user;
-     if(!user){
-      throw new BadRequestError('token not found')
-     }
-    
-    const course = await CtrlCourseService.getCourseById(req.params.id, user?.id, user?.role);
+    const user = (req as AuthenticatedRequest).user;
+    if (!user) {
+      throw new BadRequestError("token not found");
+    }
+
+    const course = await CtrlCourseService.getCourseById(
+      req.params.id,
+      user?.id,
+      user?.role
+    );
     res.status(200).json(course);
   });
 
@@ -110,6 +114,24 @@ class CtrlCourseController {
       const result = await CtrlCourseService.updateCourseImage(
         req.file as ICloudinaryFile,
         req.params.id
+      );
+      res.status(200).json(result);
+    }
+  );
+
+  // ~ Patch => /api/hackit/ctrl/course/removeStudent/course/:courseId
+  RemoveStudentFromCourse = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { courseId } = req.params;
+      const { studentId } = req.body;
+
+      if (!studentId) {
+        throw new BadRequestError("معرف الطالب مطلوب");
+      }
+
+      const result = await CtrlCourseService.RemoveStudentFromCourse(
+        courseId,
+        studentId
       );
       res.status(200).json(result);
     }

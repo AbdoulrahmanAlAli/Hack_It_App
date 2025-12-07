@@ -139,8 +139,13 @@ class HlsService {
     }
 
     // باقي الكود كما هو:
+    const KEYS_DIR = path.join(process.cwd(), "keys");
+
+    // داخل getEncryptionKey
     const fileName = `${courseId}-${sessionId}.key`;
-    const keyPath = path.join(__dirname, "../../", "keys", fileName);
+    const keyPath = path.join(KEYS_DIR, fileName);
+
+    console.log("🔑 Loading key from:", keyPath);
 
     if (!fs.existsSync(keyPath)) {
       throw new NotFoundError("مفتاح التشفير غير موجود");

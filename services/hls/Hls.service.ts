@@ -140,7 +140,7 @@ class HlsService {
 
     // باقي الكود كما هو:
     const fileName = `${courseId}-${sessionId}.key`;
-    const keyPath = path.join(__dirname, "../../../", "keys", fileName);
+    const keyPath = path.join(__dirname, "../../", "keys", fileName);
 
     if (!fs.existsSync(keyPath)) {
       throw new NotFoundError("مفتاح التشفير غير موجود");

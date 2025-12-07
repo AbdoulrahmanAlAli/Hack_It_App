@@ -166,7 +166,7 @@ class HlsService {
     }
 
     // 1) فكّ التوكن وتحقق منه
-    const payload = verifyHlsToken(hlsToken); // من hlsToken.ts
+    const payload = verifyHlsToken(hlsToken);
 
     if (
       payload.sub === undefined ||
@@ -194,12 +194,11 @@ class HlsService {
       throw new BadRequestError("غير مسجل في هذا الكورس");
     }
 
-    // 3) جلب الـ m3u8 من Wasabi كالمعتاد
+    // 3) جلب الـ m3u8 من Wasabi
     const session = await Session.findOne({ _id: sessionId, courseId }).lean();
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
     const playlistKey = session.video as string;
-    const basePrefix = playlistKey.replace(/index\.m3u8$/, "");
 
     const command = new GetObjectCommand({
       Bucket: WASABI_BUCKET_NAME,
@@ -216,19 +215,22 @@ class HlsService {
     // 4) حقن hlsToken في روابط الـ segments والـ key
     const encodedToken = encodeURIComponent(hlsToken);
 
+    // تعديل كل أسطر الـ .ts لتشير للـ API مع hlsToken
     const apiBaseSegment = `/api/hackit/hls/segment/${courseId}/${sessionId}/`;
     let modified = body.replace(
-      /^(.*\.ts)\s*$/gm,
-      (match) => `${apiBaseSegment}${match.trim()}?hlsToken=${encodedToken}`
+      /^(.+\.ts)\s*$/gm,
+      (_, tsName) =>
+        `${apiBaseSegment}${tsName.trim()}?hlsToken=${encodedToken}`
     );
 
+    // تعديل سطر الـ KEY فقط مع الحفاظ على باقي الباراميترات (مثل IV)
     const keyUri = `/api/hackit/hls/key/${courseId}/${sessionId}?hlsToken=${encodedToken}`;
-    modified = body.replace(/#EXT-X-KEY:METHOD=AES-128,[^\n]*/g, (line) => {
-      // نغيّر فقط قيمة الـ URI ونترك IV وأي باراميترات أخرى كما هي
+    modified = modified.replace(/#EXT-X-KEY:METHOD=AES-128,[^\n]*/g, (line) => {
       if (line.includes('URI="')) {
+        // نغيّر قيمة الـ URI فقط
         return line.replace(/URI="[^"]*"/, `URI="${keyUri}"`);
       }
-      // لو لسبب ما ما وجد URI، نضيفه كما هو مع الحفاظ على الباقي
+      // احتياطًا لو ما وجد URI نضيفه
       return `${line},URI="${keyUri}"`;
     });
 

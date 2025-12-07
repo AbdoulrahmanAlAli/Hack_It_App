@@ -223,10 +223,14 @@ class HlsService {
     );
 
     const keyUri = `/api/hackit/hls/key/${courseId}/${sessionId}?hlsToken=${encodedToken}`;
-    modified = modified.replace(
-      /#EXT-X-KEY:METHOD=AES-128,[^\n]*/g,
-      `#EXT-X-KEY:METHOD=AES-128,URI="${keyUri}"`
-    );
+    modified = body.replace(/#EXT-X-KEY:METHOD=AES-128,[^\n]*/g, (line) => {
+      // نغيّر فقط قيمة الـ URI ونترك IV وأي باراميترات أخرى كما هي
+      if (line.includes('URI="')) {
+        return line.replace(/URI="[^"]*"/, `URI="${keyUri}"`);
+      }
+      // لو لسبب ما ما وجد URI، نضيفه كما هو مع الحفاظ على الباقي
+      return `${line},URI="${keyUri}"`;
+    });
 
     return modified;
   }

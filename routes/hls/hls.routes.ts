@@ -15,14 +15,14 @@ router
 
 router
   .route("/key/:courseId/:sessionId")
-  .get(verifyToken, hlsController.getEncryptionKey);
+  .get( hlsController.getEncryptionKey);
 
 router
   .route("/playlist/:courseId/:sessionId")
-  .get(verifyToken, hlsController.getPlaylist);
+  .get( hlsController.getPlaylist);
 
 router
   .route("/segment/:courseId/:sessionId/:segmentName")
-  .get(verifyToken, hlsController.getSegment);
+  .get( hlsController.getSegment);
 
 export default router;

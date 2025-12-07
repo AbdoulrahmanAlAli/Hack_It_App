@@ -102,7 +102,7 @@ router
   .route("/account/:id")
   .delete(
     verifyToken,
-    checkRole(["student"]),
+    checkRole(["student", "admin"]),
     ctrlStudentController.DeleteStudentAccount
   );
 

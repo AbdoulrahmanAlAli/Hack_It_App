@@ -190,7 +190,14 @@ class CtrlStudentController {
       const user = (req as AuthenticatedRequest).user;
       const targetUserId = req.params.id;
 
-      if (user?.id !== targetUserId) {
+      // تحقق إذا كان المستخدم هو صاحب الحساب
+      const isOwner = user?.id === targetUserId;
+
+      // تحقق إذا كان المستخدم هو أدمن
+      const isAdmin = user?.role === "admin";
+
+      // السماح إذا كان صاحب الحساب أو أدمن
+      if (!isOwner && !isAdmin) {
         throw new ForbiddenError("غير مصرح لك بحذف الحساب");
       }
 

@@ -146,6 +146,10 @@ class HlsService {
     const keyPath = path.join(KEYS_DIR, fileName);
 
     console.log("🔑 Loading key from:", keyPath);
+    let keylength = fs.readFileSync(keyPath);
+
+    console.log("HLS KEY LENGTH:", keylength.length);
+    console.log("HLS KEY HEX:", keylength.toString("hex"));
 
     if (!fs.existsSync(keyPath)) {
       throw new NotFoundError("مفتاح التشفير غير موجود");

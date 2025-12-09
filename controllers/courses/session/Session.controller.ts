@@ -13,12 +13,7 @@ class CtrlSessionController {
 
   // ~ GET /api/sessions/:id - Get sessions by ID
   getSessionById = asyncHandler(async (req: Request, res: Response) => {
-    const user = (req as AuthenticatedRequest).user;
-    if (!user?.id) {
-      throw new ForbiddenError("Error: no token");
-    }
-
-    const sesson = await CtrlSessionService.getSessionById(user?.id, req.params.id);
+    const sesson = await CtrlSessionService.getSessionById(req.params.id);
     res.status(200).json(sesson);
   });
 

@@ -10,13 +10,7 @@ import {
   validateCreateSession,
   validateUpdateSession,
 } from "../../../models/courses/session/Session.model";
-import { ICloudinaryFile } from "../../../utils/types";
-import path from "path";
-import { number } from "joi";
-import { generateSignedUrl } from "../../../utils/wasabi.service";
 import { Exam } from "../../../models/courses/exam/Exam.model";
-import { hlsController } from "../../../controllers/hls/Hls.controller";
-import { HlsService } from "../../hls/Hls.service";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -59,7 +53,7 @@ class CtrlSessionService {
     return { message: "تم إنشاء الجلسة بنجاح" };
   }
 
-  static async getSessionById(studentId: string, id: string) {
+  static async getSessionById(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestError("معرف الجلسة غير صالح");
     }
@@ -71,23 +65,7 @@ class CtrlSessionService {
 
     if (!session) throw new NotFoundError("الجلسة غير موجودة");
 
-    const sessionObj = session.toObject();
-
-    const courseId = sessionObj.courseId.toString();
-    const sessionId = session.id;
-
-    const { playlistUrl, expiresIn } =
-      await HlsService.generatePlaylistUrlForStudent(
-        studentId,
-        courseId,
-        sessionId
-      );
-
-    return {
-      ...sessionObj,
-      playlistUrl,
-      playlistExpiresIn: expiresIn,
-    };
+    return session;
   }
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course
@@ -99,15 +77,7 @@ class CtrlSessionService {
       throw new NotFoundError("الكورس غير موجود");
     }
 
-    return sessions.map((session) => {
-      const obj = session.toObject();
-      const sessionId = obj._id;
-      return {
-        ...obj,
-        videoKey: obj.video,
-        playlistEndpoint: `/api/hackit/hls/playlist/${courseId}/${sessionId}`,
-      };
-    });
+    return sessions;
   }
 
   // ~ PUT /api/sessions/:id - Update sessions

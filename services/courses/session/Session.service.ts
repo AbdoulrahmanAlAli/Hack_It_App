@@ -53,27 +53,27 @@ class CtrlSessionService {
 
     return { message: "تم إنشاء الجلسة بنجاح" };
   }
-static async getSessionById(id: string) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new BadRequestError("معرف الجلسة غير صالح");
+
+  static async getSessionById(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new BadRequestError("معرف الجلسة غير صالح");
+    }
+
+    const session = await Session.findById(id).populate(
+      "files",
+      "url name type description"
+    );
+
+    if (!session) throw new NotFoundError("الجلسة غير موجودة");
+
+    const sessionObj: any = session.toObject();
+
+    // session.video يحتوي على الرابط العادي من Bunny Stream
+    // مثل: https://iframe.mediadelivery.net/play/558924/7147da37-...
+    sessionObj.video = generateBunnySignedIframeUrl(session.video);
+
+    return sessionObj;
   }
-
-  const session = await Session.findById(id).populate(
-    "files",
-    "url name type description"
-  );
-
-  if (!session) throw new NotFoundError("الجلسة غير موجودة");
-
-  const sessionObj: any = session.toObject();
-
-  // session.video يحتوي على الرابط العادي من Bunny Stream
-  // مثل: https://iframe.mediadelivery.net/play/558924/7147da37-...
-  sessionObj.videoUrl = generateBunnySignedIframeUrl(session.video);
-
-  return sessionObj;
-}
-
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course
   static async getSessionsByCourseId(courseId: string) {

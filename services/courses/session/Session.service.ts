@@ -11,6 +11,7 @@ import {
   validateUpdateSession,
 } from "../../../models/courses/session/Session.model";
 import { Exam } from "../../../models/courses/exam/Exam.model";
+import { generateBunnySignedIframeUrl } from "../../../utils/bunnySignedURL";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -52,21 +53,27 @@ class CtrlSessionService {
 
     return { message: "تم إنشاء الجلسة بنجاح" };
   }
-
-  static async getSessionById(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestError("معرف الجلسة غير صالح");
-    }
-
-    const session = await Session.findById(id).populate(
-      "files",
-      "url name type description"
-    );
-
-    if (!session) throw new NotFoundError("الجلسة غير موجودة");
-
-    return session;
+static async getSessionById(id: string) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new BadRequestError("معرف الجلسة غير صالح");
   }
+
+  const session = await Session.findById(id).populate(
+    "files",
+    "url name type description"
+  );
+
+  if (!session) throw new NotFoundError("الجلسة غير موجودة");
+
+  const sessionObj: any = session.toObject();
+
+  // session.video يحتوي على الرابط العادي من Bunny Stream
+  // مثل: https://iframe.mediadelivery.net/play/558924/7147da37-...
+  sessionObj.videoUrl = generateBunnySignedIframeUrl(session.video);
+
+  return sessionObj;
+}
+
 
   // ~ GET /api/courses/:courseId/sessions - Get all sessions for a course
   static async getSessionsByCourseId(courseId: string) {

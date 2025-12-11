@@ -5,6 +5,47 @@ export const html = (otp: string) => `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>رمز التحقق - هكرها</title>
   <style>
+    /* إعادة تعيين CSS للأمان في البريد الإلكتروني */
+    * {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #f3f4f8;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    table {
+      border-spacing: 0;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    
+    a {
+      color: #073b74;
+      text-decoration: none;
+    }
+    
+    /* الألوان */
     :root {
       --primary-color: #073b74;
       --secondary-color: #f0f7ff;
@@ -15,41 +56,22 @@ export const html = (otp: string) => `<!DOCTYPE html>
       --border-color: #e1e5eb;
       --background-light: #f9fafc;
       --background-page: #f3f4f8;
-      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      --radius: 16px;
     }
     
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      margin: 0;
-      padding: 20px;
-      background-color: var(--background-page);
-      direction: rtl;
-      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .container {
+    /* الحاوية الرئيسية */
+    .email-container {
       max-width: 600px;
       width: 100%;
+      margin: 0 auto;
       background-color: #ffffff;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 12px 35px rgba(0,0,0,0.07);
-      margin: 20px auto;
     }
     
+    /* الهيدر */
     .header {
-      background-color: var(--primary-color);
+      background-color: #073b74;
       padding: 5px 0 15px;
       text-align: center;
     }
@@ -59,18 +81,16 @@ export const html = (otp: string) => `<!DOCTYPE html>
       height: 290px;
       margin: 0 auto;
       padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     
     .logo-img {
-        width: 100%;
+      width: 100%;
       height: 100%;
       object-fit: contain;
       border-radius: 8px;
     }
     
+    /* المحتوى */
     .content {
       padding: 35px 30px;
     }
@@ -79,7 +99,7 @@ export const html = (otp: string) => `<!DOCTYPE html>
       text-align: center;
       font-size: 26px;
       font-weight: 700;
-      color: var(--text-dark);
+      color: #222b35;
       margin-bottom: 16px;
       line-height: 1.4;
     }
@@ -88,27 +108,24 @@ export const html = (otp: string) => `<!DOCTYPE html>
       text-align: center;
       font-size: 15.5px;
       line-height: 1.7;
-      color: var(--text-light);
+      color: #555c67;
       margin-bottom: 32px;
       padding: 0 10px;
     }
     
+    /* صندوق التحقق */
     .verification-box {
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
       padding: 28px 20px;
       margin: 30px 0;
-      background-color: var(--background-light);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      background-color: #f9fafc;
+      text-align: center;
     }
     
     .verification-label {
       font-size: 18px;
-      color: var(--text-dark);
-      text-align: center;
+      color: #222b35;
       font-weight: 700;
       margin-bottom: 22px;
       display: block;
@@ -116,68 +133,47 @@ export const html = (otp: string) => `<!DOCTYPE html>
     
     .verification-code {
       cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 0;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 10px auto;
       text-align: center;
       width: 100%;
       max-width: 320px;
     }
     
-    .verification-code:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
-    }
-    
     .code-number {
-      color: var(--primary-color);
+      color: #073b74;
       font-size: 24px;
       font-weight: 800;
       font-family: 'Courier New', monospace;
       letter-spacing: 2px;
-      background-color: var(--secondary-color);
-      border: 2px dashed var(--primary-color);
+      background-color: #f0f7ff;
+      border: 2px dashed #073b74;
       padding: 22px 30px;
       border-radius: 14px;
-      display: block;
-      margin: 0;
-      width: 100%;
-      user-select: all;
-    }
-    
-    .copy-success {
-      color: var(--success);
-      font-size: 13.5px;
-      margin-top: 12px;
+      display: inline-block;
+      margin: 0 auto;
+      direction: ltr;
       text-align: center;
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      min-width: 250px;
     }
     
-    .copy-success.show {
-      opacity: 1;
-      height: 22px;
+    .copy-note {
+      font-size: 13px;
+      color: #9aa1ab;
+      text-align: center;
+      margin-top: 8px;
     }
     
+    /* الوقت */
     .time-info {
       font-size: 14.5px;
-      color: var(--text-light);
+      color: #555c67;
       text-align: center;
       margin-top: 26px;
       line-height: 1.7;
     }
     
     .timer {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
       margin-bottom: 8px;
       background: #fff9e6;
       padding: 8px 16px;
@@ -185,23 +181,20 @@ export const html = (otp: string) => `<!DOCTYPE html>
       border: 1px solid #ffeaa7;
     }
     
-    .timer-icon {
-      font-size: 18px;
-    }
-    
     .timer-text {
-      color: var(--text-dark);
+      color: #222b35;
     }
     
     .highlight {
-      color: var(--primary);
+      color: #073b74;
       font-weight: 700;
     }
     
+    /* التحذير */
     .warning-box {
       margin-top: 28px;
       background-color: #fff9e6;
-      border-right: 4px solid var(--warning);
+      border-right: 4px solid #f39c12;
       border-radius: 12px;
       padding: 18px;
     }
@@ -214,32 +207,34 @@ export const html = (otp: string) => `<!DOCTYPE html>
     
     .warning-icon {
       font-size: 20px;
-      color: var(--warning);
+      color: #f39c12;
       flex-shrink: 0;
       margin-top: 2px;
     }
     
     .warning-text {
       font-size: 13.5px;
-      color: var(--text-medium);
+      color: #444c58;
       text-align: right;
       line-height: 1.7;
     }
     
     .alert {
-      color: var(--warning);
+      color: #f39c12;
       font-weight: 700;
     }
     
+    /* الملاحظة الأمنية */
     .security-note {
       font-size: 14px;
       line-height: 1.7;
-      color: var(--text-light);
+      color: #555c67;
       text-align: right;
       margin-top: 26px;
       padding: 0 5px;
     }
     
+    /* الفوتر */
     .footer {
       background-color: #f7f7fb;
       padding: 22px 30px;
@@ -251,18 +246,15 @@ export const html = (otp: string) => `<!DOCTYPE html>
     }
     
     .brand {
-      color: var(--primary);
+      color: #073b74;
       font-weight: 700;
     }
     
-    /* استعلامات الوسائط المحسنة */
-    @media (max-width: 600px) {
-      body {
-        padding: 15px;
-      }
-      
-      .container {
+    /* دعم الشاشات الصغيرة */
+    @media only screen and (max-width: 600px) {
+      .email-container {
         border-radius: 16px;
+        width: 100% !important;
       }
       
       .header {
@@ -301,9 +293,10 @@ export const html = (otp: string) => `<!DOCTYPE html>
       }
       
       .code-number {
-        font-size: 24px;
+        font-size: 22px;
         letter-spacing: 4px;
         padding: 18px 20px;
+        min-width: 200px;
       }
       
       .timer {
@@ -326,7 +319,7 @@ export const html = (otp: string) => `<!DOCTYPE html>
       }
     }
     
-    @media (max-width: 480px) {
+    @media only screen and (max-width: 480px) {
       .content {
         padding: 22px 18px;
       }
@@ -340,9 +333,10 @@ export const html = (otp: string) => `<!DOCTYPE html>
       }
       
       .code-number {
-        font-size: 22px;
+        font-size: 20px;
         letter-spacing: 3px;
         padding: 16px 18px;
+        min-width: 180px;
       }
       
       .verification-box {
@@ -351,12 +345,10 @@ export const html = (otp: string) => `<!DOCTYPE html>
       
       .timer {
         font-size: 13.5px;
-        flex-direction: column;
-        gap: 6px;
       }
     }
     
-    @media (max-width: 360px) {
+    @media only screen and (max-width: 360px) {
       .logo-container {
         width: 100px;
         height: 100px;
@@ -371,33 +363,23 @@ export const html = (otp: string) => `<!DOCTYPE html>
       }
       
       .code-number {
-        font-size: 20px;
+        font-size: 18px;
         letter-spacing: 2px;
         padding: 14px 16px;
+        min-width: 160px;
       }
       
       .verification-label {
         font-size: 14.5px;
       }
     }
-    
-    /* تأثيرات النسخ */
-    .copied {
-      animation: copyEffect 0.5s ease;
-    }
-    
-    @keyframes copyEffect {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
   </style>
 </head>
 <body>
-  <!-- الحاوية الرئيسية -->
-  <div class="container">
+  <!-- حاوية البريد الإلكتروني -->
+  <div class="email-container">
     
-    <!-- الهيدر مع صورة اللوجو -->
+    <!-- الهيدر -->
     <div class="header">
       <div class="logo-container">
         <img src="https://i.postimg.cc/MZ7d9pD5/Frame-1261154840.png"
@@ -424,25 +406,21 @@ export const html = (otp: string) => `<!DOCTYPE html>
         <span class="verification-label">رمز التحقق الخاص بك</span>
         
         <!-- رمز التحقق -->
-        <div id="verificationCode" class="verification-code">
+        <div class="verification-code">
           <span class="code-number">${otp}</span>
         </div>
         
-        <!-- رسالة نجاح النسخ -->
-        <div id="copySuccessMessage" class="copy-success">
-          ✓ تم نسخ الرمز بنجاح إلى الحافظة
+        <div class="copy-note">
+          (يمكنك نسخ الرمز يدوياً)
         </div>
         
         <!-- معلومات الصلاحية -->
         <div class="time-info">
           <div class="timer">
-            <span class="timer-icon">⏱️</span>
+            <span style="font-size: 18px; margin-left: 8px;">⏱️</span>
             <span class="timer-text">
               هذا الرمز صالح لمدة <span class="highlight">10 دقائق</span> فقط
             </span>
-          </div>
-          <div style="font-size: 13px; color: #9aa1ab; margin-top: 8px;">
-            (انقر على الرمز أعلاه لنسخه)
           </div>
         </div>
       </div>
@@ -451,7 +429,7 @@ export const html = (otp: string) => `<!DOCTYPE html>
       <p class="security-note">
         إن لم تكن أنت من طلب تسجيل الدخول، ننصحك بتسجيل الدخول فوراً والتحقق من أمان حسابك،
         أو
-        <a href="https://example.com/support" class="link">
+        <a href="https://example.com/support" style="color: #073b74; text-decoration: none;">
           التواصل مع الدعم
         </a>.
       </p>
@@ -463,7 +441,7 @@ export const html = (otp: string) => `<!DOCTYPE html>
           <div class="warning-text">
             <span class="alert">تنبيه:</span>
             لا تشارك هذا الرمز مع أي شخص، فريق هكرها لن يطلب منك أبداً مشاركة رمز التحقق.
-            يمكنك نسخ الرمز بالنقر عليه أعلاه.
+            يمكنك نسخ الرمز يدوياً.
           </div>
         </div>
       </div>
@@ -485,56 +463,73 @@ export const paymentHtml = (
   courseName: string,
   studentName: string,
   universityNumber: string | number
-) => `<!DOCTYPE html> 
+) => `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>كود دفع الكورس - هكرها</title>
   <style>
-    :root {
-      --primary-color: #073b74;
-      --secondary-color: #f0f7ff;
-      --text-dark: #222b35;
-      --text-medium: #444c58;
-      --text-light: #555c67;
-      --text-muted: #818896;
-      --border-color: #e1e5eb;
-      --background-light: #f9fafc;
-      --background-page: #f3f4f8;
-      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      --radius: 16px;
-    }
-    
+    /* إعادة تعيين CSS للأمان في البريد الإلكتروني */
     * {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
     
     body {
       margin: 0;
-      padding: 20px;
-      background-color: var(--background-page);
+      padding: 0;
+      width: 100% !important;
       direction: rtl;
-      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background-color: #f3f4f8;
+      -webkit-font-smoothing: antialiased;
     }
     
-    .container {
+    table {
+      border-spacing: 0;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    
+    a {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      color: #0052a3;
+    }
+    
+    /* الحاوية الرئيسية */
+    .email-container {
       max-width: 600px;
       width: 100%;
+      margin: 0 auto;
       background-color: #ffffff;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 12px 35px rgba(0,0,0,0.07);
-      margin: 20px auto;
     }
     
+    /* الهيدر */
     .header {
-      background-color: var(--primary-color);
+      background-color: #073b74;
       padding: 5px 0 15px;
       text-align: center;
     }
@@ -544,9 +539,6 @@ export const paymentHtml = (
       height: 290px;
       margin: 0 auto;
       padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     
     .logo-img {
@@ -556,6 +548,7 @@ export const paymentHtml = (
       border-radius: 8px;
     }
     
+    /* المحتوى */
     .content {
       padding: 30px;
     }
@@ -564,7 +557,7 @@ export const paymentHtml = (
       text-align: center;
       font-size: 26px;
       font-weight: 800;
-      color: var(--text-dark);
+      color: #222b35;
       margin: 0 0 20px 0;
       line-height: 1.4;
     }
@@ -573,59 +566,55 @@ export const paymentHtml = (
       text-align: center;
       font-size: 16px;
       line-height: 1.7;
-      color: var(--text-light);
+      color: #555c67;
       margin-bottom: 30px;
       padding: 0 5px;
     }
 
     /* صندوق معلومات الطالب */
     .student-box {
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
       padding: 22px;
       margin: 25px 0;
-      background-color: var(--background-light);
+      background-color: #f9fafc;
     }
 
     .student-line {
-  font-size: 15px;
+      font-size: 15px;
       color: #444c58;
       margin-bottom: 10px;
       font-weight: bold;
+      text-align: right;
     }
     
     .student-line:last-child {
       margin-bottom: 0;
-      border-bottom: none;
-      padding-bottom: 0;
     }
     
     .student-label {
-      color: var(--text-light);
+      color: #555c67;
       font-weight: 500;
     }
     
     .student-value {
-      color: var(--primary-color);
+      color: #073b74;
       font-weight: 700;
     }
 
     /* صندوق الكود */
     .verification-box {
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
       padding: 28px 20px;
       margin: 30px 0;
-      background-color: var(--background-light);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      background-color: #f9fafc;
+      text-align: center;
     }
 
     .verification-label {
       font-size: 18px;
-      color: var(--text-dark);
+      color: #222b35;
       text-align: center;
       font-weight: 700;
       margin-bottom: 22px;
@@ -633,59 +622,36 @@ export const paymentHtml = (
     }
 
     .verification-code {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 0;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 10px auto;
       text-align: center;
       width: 100%;
       max-width: 320px;
     }
-    
-    .verification-code:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
-    }
 
     .code-number {
-      color: var(--primary-color);
+      color: #073b74;
       font-size: 24px;
       font-weight: 800;
       font-family: 'Courier New', monospace;
       letter-spacing: 2px;
-      background-color: var(--secondary-color);
-      border: 2px dashed var(--primary-color);
+      background-color: #f0f7ff;
+      border: 2px dashed #073b74;
       padding: 22px 30px;
       border-radius: 14px;
-      display: block;
-      margin: 0;
-      width: 100%;
-      user-select: all;
+      display: inline-block;
+      margin: 0 auto;
+      direction: ltr;
+      text-align: center;
+      min-width: 250px;
     }
 
     .instructions {
       font-size: 15px;
       line-height: 1.8;
-      color: var(--text-light);
+      color: #555c67;
       text-align: right;
       margin-top: 30px;
       padding: 0 5px;
-    }
-
-    .link {
-      color: #0066cc;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    
-    .link:hover {
-      text-decoration: underline;
-      color: #0052a3;
     }
 
     .footer {
@@ -693,24 +659,22 @@ export const paymentHtml = (
       padding: 22px 30px;
       text-align: center;
       font-size: 13px;
-      color: var(--text-muted);
+      color: #818896;
       line-height: 1.7;
       border-top: 1px solid #eee;
     }
     
     .brand {
-      color: var(--primary-color);
+      color: #073b74;
       font-weight: 800;
       font-size: 15px;
     }
     
-    @media (max-width: 600px) {
-      body {
-        padding: 15px;
-      }
-      
-      .container {
+    /* دعم الشاشات الصغيرة */
+    @media only screen and (max-width: 600px) {
+      .email-container {
         border-radius: 20px;
+        width: 100% !important;
       }
       
       .content {
@@ -732,6 +696,7 @@ export const paymentHtml = (
       .code-number {
         font-size: 20px;
         padding: 18px 20px;
+        min-width: 200px;
       }
       
       .logo-container {
@@ -745,31 +710,68 @@ export const paymentHtml = (
       }
     }
     
-    @media (max-width: 400px) {
+    @media only screen and (max-width: 480px) {
       .content {
         padding: 20px;
       }
       
       .student-line {
-        flex-direction: column;
-        font-size: 15px;
-      }
-      
-      .student-label {
-        margin-bottom: 5px;
+        font-size: 14px;
+        margin-bottom: 8px;
       }
       
       .code-number {
         font-size: 18px;
         padding: 16px;
         letter-spacing: 1px;
+        min-width: 180px;
+      }
+      
+      .verification-label {
+        font-size: 16px;
+        margin-bottom: 18px;
+      }
+    }
+    
+    @media only screen and (max-width: 360px) {
+      .logo-container {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .content {
+        padding: 18px 16px;
+      }
+      
+      .title {
+        font-size: 20px;
+      }
+      
+      .description, .instructions {
+        font-size: 14px;
+      }
+      
+      .student-box {
+        padding: 16px;
+      }
+      
+      .verification-box {
+        padding: 16px;
+      }
+      
+      .code-number {
+        font-size: 16px;
+        padding: 14px 16px;
+        min-width: 160px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- حاوية البريد الإلكتروني -->
+  <div class="email-container">
     
+    <!-- الهيدر -->
     <div class="header">
       <div class="logo-container">
         <img src="https://i.postimg.cc/MZ7d9pD5/Frame-1261154840.png"
@@ -778,6 +780,7 @@ export const paymentHtml = (
       </div>
     </div>
 
+    <!-- المحتوى -->
     <div class="content">
       
       <h1 class="title">كود دفع الكورس</h1>
@@ -790,11 +793,15 @@ export const paymentHtml = (
       <div class="student-box">
         <div class="student-line">
           <span class="student-label">اسم الطالب:</span>
-          <span class="student-value">عبد</span>
+          <span class="student-value">${studentName}</span>
         </div>
         <div class="student-line">
-          <span class="student-label">${studentName}</span>
+          <span class="student-label">الرقم الجامعي:</span>
           <span class="student-value">${universityNumber}</span>
+        </div>
+        <div class="student-line">
+          <span class="student-label">اسم الكورس:</span>
+          <span class="student-value">${courseName}</span>
         </div>
       </div>
 
@@ -809,11 +816,12 @@ export const paymentHtml = (
 
       <p class="instructions">
         بعد الدفع سيتم تفعيل اشتراكك في الكورس تلقائياً.<br>
-        في حال وجود أي مشكلة يمكنك <a href="https://example.com/support" class="link">التواصل مع الدعم</a>.
+        في حال وجود أي مشكلة يمكنك <a href="https://example.com/support">التواصل مع الدعم</a>.
       </p>
 
     </div>
 
+    <!-- الفوتر -->
     <div class="footer">
       فريق <span class="brand">هكرها</span> – كلية الهندسة المعلوماتية، جامعة حلب<br>
       جميع الحقوق محفوظة © 2025<br>
@@ -831,51 +839,65 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>إعادة تعيين كلمة المرور - هكرها</title>
   <style>
-    :root {
-      --primary-color: #073b74;
-      --secondary-color: #f0f7ff;
-      --text-dark: #222b35;
-      --text-medium: #444c58;
-      --text-light: #555c67;
-      --text-muted: #818896;
-      --border-color: #e1e5eb;
-      --background-light: #f9fafc;
-      --background-page: #f3f4f8;
-      --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      --radius: 16px;
-    }
-    
+    /* إعادة تعيين CSS للأمان في البريد الإلكتروني */
     * {
-      box-sizing: border-box;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     
     body {
       margin: 0;
-      padding: 20px;
-      background-color: var(--background-page);
+      padding: 0;
+      width: 100% !important;
       direction: rtl;
-      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background-color: #f3f4f8;
+      -webkit-font-smoothing: antialiased;
     }
     
-    .container {
+    table {
+      border-spacing: 0;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    
+    a {
+      color: #073b74;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    /* الحاوية الرئيسية */
+    .email-container {
       max-width: 600px;
       width: 100%;
+      margin: 0 auto;
       background-color: #ffffff;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 12px 35px rgba(0,0,0,0.07);
-      margin: 20px auto;
     }
     
+    /* الهيدر */
     .header {
-      background-color: var(--primary-color);
+      background-color: #073b74;
       padding: 5px 0 15px;
       text-align: center;
     }
@@ -885,18 +907,16 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       height: 290px;
       margin: 0 auto;
       padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     
     .logo-img {
-        width: 100%;
+      width: 100%;
       height: 100%;
       object-fit: contain;
       border-radius: 8px;
     }
     
+    /* المحتوى */
     .content {
       padding: 35px 30px;
     }
@@ -905,39 +925,33 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       text-align: center;
       font-size: 26px;
       font-weight: 700;
-      color: var(--text-dark);
+      color: #222b35;
       margin-bottom: 16px;
       line-height: 1.4;
-    }
-    
-    .title-icon {
-      font-size: 26px;
     }
     
     .description {
       text-align: center;
       font-size: 15.5px;
       line-height: 1.7;
-      color: var(--text-light);
+      color: #555c67;
       margin-bottom: 32px;
       padding: 0 10px;
     }
     
+    /* صندوق التحقق */
     .verification-box {
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
+      border: 1px solid #e1e5eb;
+      border-radius: 16px;
       padding: 28px 20px;
       margin: 30px 0;
-      background-color: var(--background-light);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      background-color: #f9fafc;
+      text-align: center;
     }
     
     .verification-label {
       font-size: 18px;
-      color: var(--text-dark);
+      color: #222b35;
       text-align: center;
       font-weight: 700;
       margin-bottom: 22px;
@@ -945,171 +959,145 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .verification-code {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 0;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 10px auto;
       text-align: center;
       width: 100%;
       max-width: 320px;
     }
     
-    .verification-code:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(7, 59, 116, 0.15);
-    }
-    
     .code-number {
-      color: var(--primary-color);
+      color: #073b74;
       font-size: 24px;
       font-weight: 800;
       font-family: 'Courier New', monospace;
       letter-spacing: 2px;
-      background-color: var(--secondary-color);
-      border: 2px dashed var(--primary-color);
+      background-color: #f0f7ff;
+      border: 2px dashed #073b74;
       padding: 22px 30px;
       border-radius: 14px;
-      display: block;
-      margin: 0;
-      width: 100%;
-      user-select: all;
-    }
-    
-    .copy-success {
-      color: var(--success);
-      font-size: 13.5px;
-      margin-top: 12px;
+      display: inline-block;
+      margin: 0 auto;
+      direction: ltr;
       text-align: center;
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      min-width: 250px;
     }
     
-    .copy-success.show {
-      opacity: 1;
-      height: 22px;
+    .copy-note {
+      font-size: 13px;
+      color: #c97a7a;
+      text-align: center;
+      margin-top: 8px;
     }
     
+    /* الوقت */
     .time-info {
       font-size: 14.5px;
-      color: var(--text-light);
+      color: #555c67;
       text-align: center;
       margin-top: 26px;
       line-height: 1.7;
     }
     
     .timer {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
       margin-bottom: 8px;
       background: #fff9e6;
       padding: 8px 16px;
       border-radius: 25px;
       border: 1px solid #ffeaa7;
     }
-
-        .timer-icon {
-      font-size: 18px;
-    }
     
     .timer-text {
-      color: var(--text-dark);
+      color: #222b35;
     }
     
     .highlight {
-      color: var(--primary);
+      color: #073b74;
       font-weight: 700;
     }
     
+    /* التعليمات */
     .instructions {
       font-size: 14px;
       line-height: 1.7;
-      color: var(--text-medium);
+      color: #444c58;
       text-align: right;
       margin-top: 26px;
-      padding: 0 5px;
-      background: #f9f9f9;
       padding: 16px;
+      background: #f9f9f9;
       border-radius: 12px;
-      border-right: 4px solid var(--primary);
+      border-right: 4px solid #073b74;
     }
     
     .instruction-title {
       font-weight: 600;
-      color: var(--primary-dark);
+      color: #073b74;
       margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      text-align: right;
     }
     
     .instruction-steps {
-      margin-right: 24px;
       margin-top: 10px;
     }
     
     .step {
       margin-bottom: 8px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
+      text-align: right;
+      padding-right: 24px;
+      position: relative;
     }
     
     .step-number {
-      background: var(--primary-color);
+      background: #073b74;
       color: white;
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-block;
+      text-align: center;
+      line-height: 20px;
       font-size: 12px;
       font-weight: bold;
-      flex-shrink: 0;
-      margin-top: 2px;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
     
+    /* التحذير */
     .warning-box {
       margin-top: 28px;
       background-color: #fff9e6;
-      border-right: 4px solid var(--warning);
+      border-right: 4px solid #f39c12;
       border-radius: 12px;
       padding: 18px;
     }
     
     .warning-content {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      text-align: right;
     }
     
     .warning-icon {
       font-size: 20px;
-      color: var(--warning);
-      flex-shrink: 0;
-      margin-top: 2px;
+      color: #f39c12;
+      margin-left: 8px;
+      vertical-align: middle;
     }
     
     .warning-text {
       font-size: 13.5px;
-      color: var(--text-medium);
+      color: #444c58;
       text-align: right;
       line-height: 1.7;
+      display: inline-block;
+      width: calc(100% - 30px);
     }
     
     .alert {
-      color: var(--warning);
+      color: #f39c12;
       font-weight: 700;
     }
     
+    /* الفوتر */
     .footer {
       background-color: #fef5f5;
       padding: 20px 28px;
@@ -1121,31 +1109,15 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     }
     
     .brand {
-      color: var(--primary);
+      color: #073b74;
       font-weight: 700;
     }
     
-    .link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-    
-    .link:hover {
-      text-decoration: underline;
-      color: var(--primary-dark);
-    }
-    
-    /* استعلامات الوسائط المحسنة */
-    @media (max-width: 550px) {
-      body {
-        padding: 15px;
-      }
-      
-      .container {
+    /* دعم الشاشات الصغيرة */
+    @media only screen and (max-width: 600px) {
+      .email-container {
         border-radius: 16px;
-        max-width: 100%;
+        width: 100% !important;
       }
       
       .header {
@@ -1164,10 +1136,6 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       
       .title {
         font-size: 22px;
-      }
-      
-      .title-icon {
-        font-size: 24px;
       }
       
       .description {
@@ -1189,6 +1157,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
         font-size: 22px;
         letter-spacing: 3px;
         padding: 16px 20px;
+        min-width: 200px;
       }
       
       .timer {
@@ -1212,15 +1181,13 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       }
     }
     
-    @media (max-width: 400px) {
+    @media only screen and (max-width: 480px) {
       .content {
         padding: 20px 16px;
       }
       
       .title {
         font-size: 20px;
-        flex-direction: column;
-        gap: 5px;
       }
       
       .description {
@@ -1231,34 +1198,57 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
         font-size: 20px;
         letter-spacing: 2px;
         padding: 14px 16px;
+        min-width: 180px;
       }
       
       .verification-box {
         padding: 20px 16px;
       }
       
-      .instruction-steps {
-        margin-right: 20px;
+      .step {
+        padding-right: 20px;
       }
     }
     
-    /* تأثيرات النسخ */
-    .copied {
-      animation: copyEffect 0.5s ease;
-    }
-    
-    @keyframes copyEffect {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
+    @media only screen and (max-width: 360px) {
+      .logo-container {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .content {
+        padding: 18px 14px;
+      }
+      
+      .title {
+        font-size: 18px;
+      }
+      
+      .description {
+        font-size: 13.5px;
+      }
+      
+      .verification-label {
+        font-size: 14px;
+      }
+      
+      .code-number {
+        font-size: 18px;
+        padding: 12px 14px;
+        min-width: 160px;
+      }
+      
+      .instructions {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- الحاوية الرئيسية -->
-  <div class="container">
+  <!-- حاوية البريد الإلكتروني -->
+  <div class="email-container">
     
-    <!-- الهيدر مع صورة اللوجو -->
+    <!-- الهيدر -->
     <div class="header">
       <div class="logo-container">
         <img src="https://i.postimg.cc/MZ7d9pD5/Frame-1261154840.png"
@@ -1271,8 +1261,7 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
     <div class="content">
       <!-- العنوان -->
       <h1 class="title">
-        <span class="title-icon">🔒</span>
-        طلب إعادة تعيين كلمة المرور
+        🔒 طلب إعادة تعيين كلمة المرور
       </h1>
 
       <!-- فقرة الشرح -->
@@ -1286,46 +1275,40 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
         <span class="verification-label">رمز التحقق لإعادة تعيين كلمة المرور</span>
         
         <!-- رمز التحقق -->
-        <div id="verificationCode" class="verification-code">
+        <div class="verification-code">
           <span class="code-number">${otp}</span>
         </div>
         
-        <!-- رسالة نجاح النسخ -->
-        <div id="copySuccessMessage" class="copy-success">
-          ✓ تم نسخ الرمز بنجاح إلى الحافظة
+        <div class="copy-note">
+          (يمكنك نسخ الرمز يدوياً)
         </div>
         
         <!-- معلومات الصلاحية -->
         <div class="time-info">
           <div class="timer">
-            <span class="timer-icon">⏱️</span>
+            <span style="font-size: 18px; margin-left: 8px;">⏱️</span>
             <span class="timer-text">
               هذا الرمز صالح لمدة <span class="highlight">10 دقائق</span> فقط
             </span>
-          </div>
-          <div style="font-size: 13px; color: #c97a7a; margin-top: 8px;">
-            (انقر على الرمز أعلاه لنسخه)
           </div>
         </div>
       </div>
 
       <!-- التعليمات -->
       <div class="instructions">
-        <div class="instruction-title">
-          📝 تعليمات الاستخدام:
-        </div>
+        <div class="instruction-title">📝 تعليمات الاستخدام:</div>
         <div class="instruction-steps">
           <div class="step">
-            <div class="step-number">1</div>
-            <div>انسخ الرمز أعلاه بالنقر عليه</div>
+            <span class="step-number">1</span>
+            <span>انسخ الرمز أعلاه</span>
           </div>
           <div class="step">
-            <div class="step-number">2</div>
-            <div>ارجع إلى التطبيق وأدخل الرمز في الحقل المخصص</div>
+            <span class="step-number">2</span>
+            <span>ارجع إلى التطبيق وأدخل الرمز في الحقل المخصص</span>
           </div>
           <div class="step">
-            <div class="step-number">3</div>
-            <div>أنشئ كلمة مرور جديدة قوية لحسابك</div>
+            <span class="step-number">3</span>
+            <span>أنشئ كلمة مرور جديدة قوية لحسابك</span>
           </div>
         </div>
       </div>
@@ -1333,13 +1316,13 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       <!-- مربع الملاحظة -->
       <div class="warning-box">
         <div class="warning-content">
-          <div class="warning-icon">⚠️</div>
-          <div class="warning-text">
+          <span class="warning-icon">⚠️</span>
+          <span class="warning-text">
             <span class="alert">مهم:</span>
             إذا لم تكن أنت من طلب إعادة تعيين كلمة المرور، 
             يمكنك تجاهل هذا البريد الإلكتروني بشكل آمن. 
             لا تشارك هذا الرمز مع أي شخص.
-          </div>
+          </span>
         </div>
       </div>
     </div>
@@ -1350,10 +1333,9 @@ export const resetPasswordHtml = (otp: string) => `<!DOCTYPE html>
       جميع الحقوق محفوظة © 2025<br>
       هذه رسالة آلية، الرجاء عدم الرد على هذا البريد.<br>
       <small style="color: #aaa; font-size: 11px;">
-        للحصول على المساعدة، <a href="https://example.com/support" class="link">اتصل بالدعم</a>
+        للحصول على المساعدة، <a href="https://example.com/support">اتصل بالدعم</a>
       </small>
     </div>
   </div>
 </body>
-</html>
-`;
+</html>`;

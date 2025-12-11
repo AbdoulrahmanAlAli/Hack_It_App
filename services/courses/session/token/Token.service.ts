@@ -60,7 +60,7 @@ class VideoTokenService {
     }
 
     if (videoToken.used) {
-      throw new BadRequestError("تم استخدام هذا الرابط مسبقاً");
+      throw new BadRequestError("تفقد الإنترنت");
     }
 
     // التحقق من انتهاء الصلاحية

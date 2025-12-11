@@ -50,6 +50,9 @@ import routeVersion from "./routes/version/Version.route";
 // route import Ads
 import routeAds from "./routes/ads/Ads.route";
 
+// route import video
+import routeVideo from "./routes/course/session/token/Token.route"
+
 // Validate required environment variables
 const requiredEnvVars = [
   "MONGO_URL",
@@ -139,6 +142,8 @@ app.use("/api/hackit/ctrl/version", routeVersion);
 // Routes Ads
 app.use("/api/hackit/ctrl/ads", routeAds);
 
+// Routes Video
+app.use("/api/video", routeVideo);
 
 // Error Handler Middleware
 app.use(notFound);

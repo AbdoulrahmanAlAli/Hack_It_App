@@ -12,6 +12,7 @@ import {
 } from "../../../models/courses/session/Session.model";
 import { Exam } from "../../../models/courses/exam/Exam.model";
 import { generateBunnySignedIframeUrl } from "../../../utils/bunnySignedURL";
+import { VideoTokenService } from "./token/Token.service";
 
 class CtrlSessionService {
   // ~ POST /api/sessions - Create a new session
@@ -54,7 +55,7 @@ class CtrlSessionService {
     return { message: "تم إنشاء الجلسة بنجاح" };
   }
 
-  static async getSessionById(id: string) {
+  static async getSessionById(id: string, userId?: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestError("معرف الجلسة غير صالح");
     }
@@ -68,9 +69,12 @@ class CtrlSessionService {
 
     const sessionObj: any = session.toObject();
 
-    // session.video يحتوي على الرابط العادي من Bunny Stream
-    // مثل: https://iframe.mediadelivery.net/play/558924/7147da37-...
-    sessionObj.video = generateBunnySignedIframeUrl(session.video);
+    // استبدال رابط الفيديو برابط الـ One-Time
+    sessionObj.video = await VideoTokenService.createVideoToken(
+      id,
+      session.video,
+      userId
+    );
 
     return sessionObj;
   }

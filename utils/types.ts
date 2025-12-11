@@ -13,6 +13,7 @@ export interface EmailOptions {
   html: string;
 }
 
+
 /**
  * انشاء token
  */
@@ -47,4 +48,16 @@ export interface AuthenticatedRequest extends Request {
  */
 export interface ICloudinaryFile extends Express.Multer.File {
   path: string;
+}
+
+export interface CheckStudentExistenceParams {
+  phoneNumber?: string;
+  email?: string;
+  universityNumber?: number;
+}
+
+export interface ExistenceResults {
+  emailExists?: boolean;
+  phoneNumberExists?: boolean;
+  universityNumberExists?: boolean;
 }

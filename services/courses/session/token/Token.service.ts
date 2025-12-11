@@ -44,7 +44,7 @@ class VideoTokenService {
     if (!videoToken) throw new NotFoundError("فشل إنشاء رمز الفيديو");
 
     // إرجاع رابط الـ proxy
-    return `http://localhost:1000/api/video/play/${token}`;
+    return `https://hackerha.cloud/api/video/play/${token}`;
   }
 
   // التحقق من صلاحية الرمز واستخدامه

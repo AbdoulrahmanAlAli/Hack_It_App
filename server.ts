@@ -23,14 +23,14 @@ import routeCtrlTeacher from "./routes/users/teachers/Teacher.route";
 import routeAuthAdmin from "./routes/users/admin/Auth.route";
 import routeCtrlAdmin from "./routes/users/admin/Admin.route";
 
-// route import course
-import routeCourse from "./routes/course/Course.route";
-import routeSession from "./routes/course/session/Session.route";
-import routeFile from "./routes/course/session/file/File.route";
-import routeComment from "./routes/course/comment/Comment.route";
-import routeExam from "./routes/course/exam/Exam.route";
-import routeGroup from "./routes/course/exam/group/Group.route";
-import routeQuestion from "./routes/course/exam/question/Question.route";
+// route import courses
+import routecourses from "./routes/courses/Course.route";
+import routeSession from "./routes/courses/session/Session.route";
+import routeFile from "./routes/courses/session/file/File.route";
+import routeComment from "./routes/courses/comment/Comment.route";
+import routeExam from "./routes/courses/exam/Exam.route";
+import routeGroup from "./routes/courses/exam/group/Group.route";
+import routeQuestion from "./routes/courses/exam/question/Question.route";
 
 // route import bank
 import routeBank from "./routes/banks/Bank.route";
@@ -51,7 +51,7 @@ import routeVersion from "./routes/version/Version.route";
 import routeAds from "./routes/ads/Ads.route";
 
 // route import video
-import routeVideo from "./routes/course/session/token/Token.route"
+import routeVideo from "./routes/courses/session/token/Token.route";
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -115,8 +115,8 @@ app.use("/api/hackit/ctrl/teacher", routeCtrlTeacher);
 app.use("/api/hackit/ctrl/admin", routeAuthAdmin);
 app.use("/api/hackit/ctrl/admin", routeCtrlAdmin);
 
-// Routes Course
-app.use("/api/hackit/ctrl/course", routeCourse);
+// Routes courses
+app.use("/api/hackit/ctrl/courses", routecourses);
 app.use("/api/hackit/ctrl/session", routeSession);
 app.use("/api/hackit/ctrl/file", routeFile);
 app.use("/api/hackit/ctrl/comment", routeComment);

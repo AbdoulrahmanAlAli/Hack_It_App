@@ -116,7 +116,7 @@ app.use("/api/hackit/ctrl/admin", routeAuthAdmin);
 app.use("/api/hackit/ctrl/admin", routeCtrlAdmin);
 
 // Routes courses
-app.use("/api/hackit/ctrl/courses", routecourses);
+app.use("/api/hackit/ctrl/course", routecourses);
 app.use("/api/hackit/ctrl/session", routeSession);
 app.use("/api/hackit/ctrl/file", routeFile);
 app.use("/api/hackit/ctrl/comment", routeComment);

@@ -93,4 +93,13 @@ router
     teacherController.RemoveStudentFromCourse
   );
 
+// ~ GET => /api/hackit/ctrl/teacher/removeStudent/course/:courseId/:teacherId
+router
+  .route("/all")
+  .get(
+    verifyToken,
+    checkRole(["admin"]),
+    teacherController.getTeachers
+  );
+
 export default router;

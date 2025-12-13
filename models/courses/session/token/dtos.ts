@@ -5,7 +5,7 @@ export interface IVideoToken extends Document {
   libraryId: string;        // libraryId من رابط Bunny
   token: string;            // الرمز الفريد
   used: boolean;            // هل تم استخدامه؟
-  sessionId: Types.ObjectId; // جلسة الفيديو
+  id: Types.ObjectId; // جلسة الفيديو
   userId?: Types.ObjectId;  // المستخدم (اختياري)
   expiresAt: Date;          // تاريخ انتهاء الصلاحية
 }

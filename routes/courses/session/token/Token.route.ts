@@ -15,22 +15,4 @@ router.route("/play/:token").get(
   videoTokenController.playVideoWithToken
 );
 
-// الحصول على رموز جلسة معينة
-router.route("/session/:sessionId").get(
-  verifyToken,
-  videoTokenController.getTokensBySessionId
-);
-
-// حذف رمز
-router.route("/:id").delete(
-  verifyToken,
-  videoTokenController.deleteToken
-);
-
-// حذف جميع رموز الجلسة
-router.route("/session/:sessionId").delete(
-  verifyToken,
-  videoTokenController.deleteTokensBySessionId
-);
-
 export default router;

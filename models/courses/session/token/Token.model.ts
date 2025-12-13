@@ -26,10 +26,10 @@ const VideoTokenSchema = new Schema<IVideoToken>(
       type: Boolean,
       default: false,
     },
-    sessionId: {
+    id: {
       type: Schema.Types.ObjectId,
       ref: "Session",
-      required: [true, "معرف الجلسة مطلوب"],
+      required: [true, "المعرف مطلوب"],
     },
     userId: {
       type: Schema.Types.ObjectId,
@@ -71,9 +71,9 @@ const validateCreateVideoToken = (obj: Partial<IVideoToken>): joi.ValidationResu
       "string.empty": "الرمز مطلوب",
       "any.required": "الرمز مطلوب",
     }),
-    sessionId: joi.string().required().messages({
-      "string.empty": "معرف الجلسة مطلوب",
-      "any.required": "معرف الجلسة مطلوب",
+    id: joi.string().required().messages({
+      "string.empty": "المعرف مطلوب",
+      "any.required": "المعرف مطلوب",
     }),
     userId: joi.string(),
   });

@@ -14,11 +14,7 @@ import { generateBunnySignedIframeUrl } from "../../../../utils/bunnySignedURL";
 
 class VideoTokenService {
   // إنشاء رمز فيديو لمرة واحدة
-  static async createVideoToken(
-    sessionId: string,
-    videoUrl: string,
-    userId?: string
-  ) {
+  static async createVideoToken(id: string, videoUrl: string, userId?: string) {
     // استخراج libraryId و videoId من رابط Bunny
     const url = new URL(videoUrl);
     const segments = url.pathname.split("/").filter(Boolean);
@@ -32,11 +28,11 @@ class VideoTokenService {
       videoId,
       libraryId,
       token,
-      sessionId,
+      id,
       userId: userId || null,
     };
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-      throw new BadRequestError("معرف الجلسة غير صالح");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new BadRequestError("المعرف غير صالح");
     }
 
     const videoToken = await VideoToken.create(videoTokenData);
@@ -44,7 +40,7 @@ class VideoTokenService {
     if (!videoToken) throw new NotFoundError("فشل إنشاء رمز الفيديو");
 
     // إرجاع رابط الـ proxy
-    return `https://hackerha.cloud/api/video/play/${token}`;
+    return `http://localhost:1000/api/video/play/${token}`;
   }
 
   // التحقق من صلاحية الرمز واستخدامه
@@ -79,46 +75,7 @@ class VideoTokenService {
     // إرجاع رابط الفيديو الحقيقي
     return {
       videoUrl: signedVideoUrl,
-      sessionId: videoToken.sessionId,
-    };
-  }
-
-  // الحصول على جميع الرموز لجلسة معينة
-  static async getTokensBySessionId(sessionId: string) {
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-      throw new BadRequestError("معرف الجلسة غير صالح");
-    }
-
-    const tokens = await VideoToken.find({ sessionId }).sort({
-      createdAt: -1,
-    });
-
-    return tokens;
-  }
-
-  // حذف رمز
-  static async deleteToken(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestError("معرف الرمز غير صالح");
-    }
-
-    const token = await VideoToken.findByIdAndDelete(id);
-    if (!token) throw new NotFoundError("الرمز غير موجود");
-
-    return { message: "تم حذف الرمز بنجاح" };
-  }
-
-  // حذف جميع الرموز لجلسة معينة
-  static async deleteTokensBySessionId(sessionId: string) {
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-      throw new BadRequestError("معرف الجلسة غير صالح");
-    }
-
-    const result = await VideoToken.deleteMany({ sessionId });
-
-    return {
-      message: "تم حذف جميع رموز الجلسة بنجاح",
-      deletedCount: result.deletedCount,
+      id: videoToken.id,
     };
   }
 }

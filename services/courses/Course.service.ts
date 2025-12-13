@@ -12,6 +12,7 @@ import { Teacher } from "../../models/users/teachers/Teacher.model";
 import { Exam } from "../../models/courses/exam/Exam.model";
 import mongoose from "mongoose";
 import { Student } from "../../models/users/students/Student.model";
+import { VideoTokenService } from "./session/token/Token.service";
 
 class CtrlCourseService {
   // ~ POST /api/hackit/ctrl/course - Create a new course
@@ -62,7 +63,7 @@ class CtrlCourseService {
     }
 
     const course = await Course.findById(id)
-      .populate("teacher")
+      .populate("teacher", "-password -available -suspended -resetPass -suspensionReason -suspensionEnd -createdAt -updatedAt -__v")
       .populate({
         path: "sessions",
         options: { sort: { createdAt: -1 } },
@@ -183,6 +184,22 @@ class CtrlCourseService {
       firstSession: firstSession,
     };
 
+    if (courseWithStats.video) {
+      courseWithStats.video = await VideoTokenService.createVideoToken(
+        id,
+        courseWithStats.video,
+        studentId || undefined
+      );
+    }
+
+    if (courseNotEnrolled.video) {
+      courseNotEnrolled.video = await VideoTokenService.createVideoToken(
+        id,
+        courseNotEnrolled.video,
+        studentId || undefined
+      );
+    }
+
     if (role === "student") {
       if (!studentId) {
         throw new BadRequestError("معرف الطالب مطلوب");
@@ -236,7 +253,7 @@ class CtrlCourseService {
 
     const courses = await Course.find(filter)
       .sort({ createdAt: -1 })
-      .select("-__v")
+      .select("-__v -video")
       .populate("teacher");
 
     return courses;

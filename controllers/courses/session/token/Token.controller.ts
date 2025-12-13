@@ -36,36 +36,6 @@ class VideoTokenController {
 
     return res.redirect(result.videoUrl);
   });
-
-  // الحصول على رموز جلسة معينة
-  getTokensBySessionId = asyncHandler(async (req: Request, res: Response) => {
-    const tokens = await VideoTokenService.getTokensBySessionId(
-      req.params.sessionId
-    );
-
-    res.status(200).json({
-      success: true,
-      data: tokens,
-    });
-  });
-
-  // حذف رمز
-  deleteToken = asyncHandler(async (req: Request, res: Response) => {
-    const result = await VideoTokenService.deleteToken(req.params.id);
-
-    res.status(200).json(result);
-  });
-
-  // حذف جميع رموز الجلسة
-  deleteTokensBySessionId = asyncHandler(
-    async (req: Request, res: Response) => {
-      const result = await VideoTokenService.deleteTokensBySessionId(
-        req.params.sessionId
-      );
-
-      res.status(200).json(result);
-    }
-  );
 }
 
 export const videoTokenController = new VideoTokenController();
